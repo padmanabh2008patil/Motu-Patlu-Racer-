@@ -1,251 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Turbo Racers</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body {
-      min-height: 100vh;
-      background: linear-gradient(#111827, #374151);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<title>Motu-Patlu Racer</title>
 
-    .game {
-      width: 100%;
-      max-width: 900px;
-      min-height: 100vh;
-      padding: 25px 15px;
-      text-align: center;
-    }
+<link rel="stylesheet" href="style.css">
 
-    h1 {
-      font-size: 42px;
-      margin: 20px 0 8px;
-      color: #ffd54a;
-      text-shadow: 3px 3px #000;
-    }
-
-    .subtitle {
-      color: #ddd;
-      margin-bottom: 25px;
-    }
-
-    .characters {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-    }
-
-    .character {
-      background: #1f2937;
-      border: 3px solid #555;
-      border-radius: 18px;
-      padding: 18px 10px;
-      min-height: 210px;
-      position: relative;
-      transition: 0.2s;
-    }
-
-    .character.selected {
-      border-color: #ffd54a;
-      transform: scale(1.03);
-    }
-
-    .character.locked {
-      opacity: 0.55;
-    }
-
-    .avatar {
-      width: 100px;
-      height: 100px;
-      margin: auto;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff9800, #e65100);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 48px;
-      border: 4px solid white;
-    }
-
-    .character h2 {
-      margin: 12px 0 5px;
-    }
-
-    .status {
-      font-size: 14px;
-      color: #9ca3af;
-    }
-
-    button {
-      margin-top: 12px;
-      padding: 11px 22px;
-      border: none;
-      border-radius: 10px;
-      background: #ffd54a;
-      color: #111;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #555;
-      color: #aaa;
-      cursor: not-allowed;
-    }
-
-    #selectedText {
-      margin-top: 25px;
-      font-size: 20px;
-      color: #ffd54a;
-    }
-
-    #startButton {
-      font-size: 20px;
-      padding: 14px 35px;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 500px) {
-      h1 {
-        font-size: 32px;
-      }
-
-      .characters {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .character {
-        min-height: 195px;
-      }
-
-      .avatar {
-        width: 75px;
-        height: 75px;
-        font-size: 36px;
-      }
-    }
-  </style>
 </head>
+
 
 <body>
 
-  <div class="game">
 
-    <h1>🏎️ TURBO RACERS</h1>
+<header>
 
-    <p class="subtitle">
-      Choose Your Racer
+    <h1>
+        🏎️ MOTU-PATLU RACER
+    </h1>
+
+    <p>
+        Choose Your Racer
     </p>
+
+</header>
+
+
+<section class="character-section">
+
+    <h2>
+        🏁 Select Character
+    </h2>
+
 
     <div class="characters">
 
-      <!-- PLAYER -->
-      <div class="character" id="racer1">
-        <div class="avatar">🏎️</div>
-        <h2>Motu</h2>
-        <p class="status">UNLOCKED</p>
-        <button onclick="selectRacer('Motu')">
-          SELECT
-        </button>
-      </div>
 
-      <!-- LOCKED -->
-      <div class="character locked">
-        <div class="avatar">🏎️</div>
-        <h2>Patlu</h2>
-        <p class="status">🔒 Locked</p>
-        <button disabled>
-          LOCKED
-        </button>
-      </div>
+        <!-- MOTU -->
 
-      <div class="character locked">
-        <div class="avatar">🏎️</div>
-        <h2>Dr. Jhatka</h2>
-        <p class="status">🔒 Locked</p>
-        <button disabled>
-          LOCKED
-        </button>
-      </div>
+        <div
+            class="character-card"
+            id="Motu"
+            onclick="selectCharacter('Motu')">
 
-      <div class="character locked">
-        <div class="avatar">🏎️</div>
-        <h2>Singham</h2>
-        <p class="status">🔒 Locked</p>
-        <button disabled>
-          LOCKED
-        </button>
-      </div>
+            <div class="character-image">
+                🏎️
+            </div>
 
-      <div class="character locked">
-        <div class="avatar">🏎️</div>
-        <h2>Don</h2>
-        <p class="status">🔒 Locked</p>
-        <button disabled>
-          LOCKED
-        </button>
-      </div>
+            <h3>
+                Motu
+            </h3>
+
+            <p>
+                READY
+            </p>
+
+        </div>
+
+
+        <!-- PATLU -->
+
+        <div
+            class="character-card locked"
+            id="Patlu"
+            onclick="selectCharacter('Patlu')">
+
+            <div class="character-image">
+                🚗
+            </div>
+
+            <h3>
+                Patlu
+            </h3>
+
+            <p>
+                🔒 Level 5
+            </p>
+
+        </div>
+
+
+        <!-- DR JHATKA -->
+
+        <div
+            class="character-card locked"
+            id="Dr. Jhatka"
+            onclick="selectCharacter('Dr. Jhatka')">
+
+            <div class="character-image">
+                🚙
+            </div>
+
+            <h3>
+                Dr. Jhatka
+            </h3>
+
+            <p>
+                🔒 Level 10
+            </p>
+
+        </div>
+
+
+        <!-- SINGHAM -->
+
+        <div
+            class="character-card locked"
+            id="Singham"
+            onclick="selectCharacter('Singham')">
+
+            <div class="character-image">
+                🚓
+            </div>
+
+            <h3>
+                Singham
+            </h3>
+
+            <p>
+                🔒 Level 15
+            </p>
+
+        </div>
+
+
+        <!-- DON -->
+
+        <div
+            class="character-card locked"
+            id="Don"
+            onclick="selectCharacter('Don')">
+
+            <div class="character-image">
+                🏁
+            </div>
+
+            <h3>
+                Don
+            </h3>
+
+            <p>
+                🔒 Level 20
+            </p>
+
+        </div>
+
 
     </div>
 
-    <div id="selectedText">
-      No racer selected
-    </div>
 
-    <button id="startButton" onclick="startGame()" disabled>
-      🏁 START GAME
+    <!-- START -->
+
+    <button
+        class="start-button"
+        onclick="startGame()">
+
+        🏁 START GAME
+
     </button>
 
-  </div>
 
-  <script>
+</section>
 
-    let selectedRacer = "";
 
-    function selectRacer(name) {
+<footer>
 
-      selectedRacer = name;
+    Motu-Patlu Racer © 2026
 
-      document.getElementById("racer1")
-        .classList.add("selected");
+</footer>
 
-      document.getElementById("selectedText").innerText =
-        "Selected Racer: " + name;
 
-      document.getElementById("startButton").disabled = false;
-    }
+<script src="game.js"></script>
 
-    function startGame() {
-
-      if (selectedRacer === "") {
-        alert("Please select a racer first!");
-        return;
-      }
-
-      alert(
-        "🏁 Race Starting!\n\n" +
-        selectedRacer +
-        " is your player.\n\n" +
-        "Patlu, Dr. Jhatka, Singham and Don will be computer racers."
-      );
-
-    }
-
-  </script>
 
 </body>
-      </html>
+
+</html>
