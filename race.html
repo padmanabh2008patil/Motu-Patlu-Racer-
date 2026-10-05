@@ -1,438 +1,774 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Motu-Patlu Racer - Level 1</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Motu-Patlu Racer - Race</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    overflow: hidden;
     font-family: Arial, sans-serif;
     background: #111;
-}
-
-/* TOP BAR */
-
-.race-header {
-    height: 65px;
-    background: linear-gradient(90deg, #ff6b00, #ffb300);
     color: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-weight: bold;
-    font-size: 17px;
+    text-align: center;
+    overflow: hidden;
 }
 
-/* RACE AREA */
+.top-bar {
+    height: 90px;
+    background: linear-gradient(
+        135deg,
+        #ff9800,
+        #e65100
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    padding: 8px;
+}
+
+.top-bar h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.top-bar p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+
+/* =========================
+   RACE AREA
+========================= */
 
 .race-area {
+
     position: relative;
+
     width: 100%;
-    height: calc(100vh - 65px);
+    height: calc(100vh - 170px);
+
+    min-height: 500px;
+
     overflow: hidden;
 
     background:
         linear-gradient(
-            90deg,
-            #238b45 0%,
-            #238b45 15%,
-            #444 15%,
-            #444 85%,
-            #238b45 85%,
-            #238b45 100%
+            to right,
+            #388e3c 0%,
+            #388e3c 18%,
+            #444 18%,
+            #444 82%,
+            #388e3c 82%,
+            #388e3c 100%
         );
 }
 
-/* ROAD DIVIDER */
+
+/* ROAD */
+
+.road {
+
+    position: absolute;
+
+    left: 18%;
+    right: 18%;
+
+    top: 0;
+    bottom: 0;
+
+    background: #444;
+
+    border-left: 6px solid white;
+    border-right: 6px solid white;
+}
+
+
+/* ROAD LINES */
 
 .road-line {
+
     position: absolute;
-    left: 50%;
-    width: 7px;
-    height: 90px;
+
+    width: 8px;
+    height: 70px;
+
     background: white;
+
+    left: 50%;
+
     transform: translateX(-50%);
-    animation: roadMove 0.45s linear infinite;
 }
 
-.line1 { top: 0; }
-.line2 { top: 180px; }
-.line3 { top: 360px; }
-.line4 { top: 540px; }
-.line5 { top: 720px; }
-
-@keyframes roadMove {
-
-    from {
-        transform: translate(-50%, -120px);
-    }
-
-    to {
-        transform: translate(-50%, 100vh);
-    }
-}
-
-/* CARS */
-
-.car {
-    position: absolute;
-    width: 58px;
-    height: 85px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 42px;
-    z-index: 5;
-}
 
 /* PLAYER */
 
-#playerCar {
-    bottom: 55px;
+.player {
+
+    position: absolute;
+
+    bottom: 30px;
+
     left: 50%;
+
     transform: translateX(-50%);
+
+    font-size: 55px;
+
     z-index: 10;
+
+    transition: left 0.08s linear;
 }
 
-/* AI */
 
-.enemy {
-    top: -100px;
-}
+/* AI RACERS */
 
-/* FINISH LINE */
+.ai {
 
-.finish-line {
     position: absolute;
-    top: -100px;
-    left: 15%;
-    width: 70%;
-    height: 70px;
 
-    background:
-        repeating-linear-gradient(
-            45deg,
-            white 0px,
-            white 20px,
-            black 20px,
-            black 40px
-        );
+    font-size: 48px;
 
-    z-index: 4;
+    z-index: 5;
 }
 
-/* MESSAGE */
 
-#message {
+/* COUNTDOWN */
+
+.countdown {
+
     position: absolute;
-    top: 20px;
+
+    top: 40%;
     left: 50%;
-    transform: translateX(-50%);
 
-    color: white;
-    font-size: 30px;
+    transform: translate(
+        -50%,
+        -50%
+    );
+
+    font-size: 80px;
+
     font-weight: bold;
 
-    text-shadow: 3px 3px 5px black;
+    color: #ffd700;
 
-    z-index: 30;
+    text-shadow:
+        3px 3px 10px black;
+
+    z-index: 50;
 }
 
-/* CONTROLS */
 
-.controls {
-    position: absolute;
-    bottom: 15px;
-    left: 0;
-
-    width: 100%;
-
-    display: flex;
-    justify-content: space-between;
-
-    padding: 0 25px;
-
-    z-index: 20;
-}
-
-.control-btn {
-    width: 70px;
-    height: 70px;
-
-    border-radius: 50%;
-
-    border: 3px solid white;
-
-    background: rgba(0,0,0,0.65);
-
-    color: white;
-
-    font-size: 30px;
-}
-
-.control-btn:active {
-    transform: scale(0.9);
-    background: #ff9800;
-}
-
-/* RESULT BOX */
+/* RESULT */
 
 .result-box {
+
     display: none;
 
-    position: absolute;
+    position: fixed;
 
     top: 50%;
     left: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     width: 85%;
     max-width: 400px;
 
     padding: 30px;
 
-    background: rgba(0,0,0,0.95);
-
-    color: white;
+    background: rgba(
+        0,
+        0,
+        0,
+        0.95
+    );
 
     border: 3px solid #ff9800;
 
     border-radius: 20px;
 
-    text-align: center;
-
     z-index: 100;
 }
 
-.result-box h2 {
-    color: #ffc107;
+.result-box h1 {
+    margin-top: 0;
 }
 
 .result-box button {
-    margin-top: 15px;
 
-    padding: 12px 25px;
+    margin: 7px;
+
+    padding: 12px 22px;
 
     border: none;
 
-    border-radius: 25px;
+    border-radius: 10px;
 
     background: #ff9800;
 
     color: white;
 
-    font-size: 18px;
+    font-size: 16px;
 
     font-weight: bold;
 }
+
+
+/* CONTROLS */
+
+.controls {
+
+    position: fixed;
+
+    bottom: 15px;
+
+    left: 0;
+    right: 0;
+
+    display: flex;
+
+    justify-content:
+        space-evenly;
+
+    z-index: 80;
+}
+
+.controls button {
+
+    width: 80px;
+    height: 55px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #ff9800;
+
+    color: white;
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+.controls button:active {
+
+    background: #e65100;
+
+    transform: scale(0.95);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .top-bar {
+        height: 85px;
+    }
+
+    .top-bar h2 {
+        font-size: 16px;
+    }
+
+    .top-bar p {
+        font-size: 12px;
+    }
+
+    .player {
+        font-size: 48px;
+    }
+
+    .ai {
+        font-size: 40px;
+    }
+
+    .countdown {
+        font-size: 65px;
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- HEADER -->
 
-<div class="race-header">
+<!-- =========================
+     TOP INFORMATION
+========================= -->
+
+<div class="top-bar">
 
     <div>
-        🏁 LEVEL 1
+
+        <h2 id="sectionName">
+            Village
+        </h2>
+
+        <p id="levelText">
+            Level 1
+        </p>
+
     </div>
 
-    <div>
-        🏎️ <span id="playerName">Motu</span>
-    </div>
 
     <div>
-        🏆 Position:
-        <span id="position">1</span>
+
+        <h2 id="playerName">
+            Motu
+        </h2>
+
+        <p>
+            🏎️ PLAYER
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <h2 id="bossName">
+            Race
+        </h2>
+
+        <p id="raceType">
+            Normal Race
+        </p>
+
     </div>
 
 </div>
 
 
-<!-- RACE -->
+<!-- =========================
+     RACE AREA
+========================= -->
 
 <div class="race-area">
 
-    <div id="message">
-        3
+    <div class="road"></div>
+
+
+    <!-- ROAD LINES -->
+
+    <div
+        class="road-line"
+        style="top: 0;">
+    </div>
+
+    <div
+        class="road-line"
+        style="top: 140px;">
+    </div>
+
+    <div
+        class="road-line"
+        style="top: 280px;">
+    </div>
+
+    <div
+        class="road-line"
+        style="top: 420px;">
     </div>
 
 
-    <!-- ROAD -->
-
-    <div class="road-line line1"></div>
-    <div class="road-line line2"></div>
-    <div class="road-line line3"></div>
-    <div class="road-line line4"></div>
-    <div class="road-line line5"></div>
-
-
-    <!-- FINISH -->
+    <!-- PLAYER CAR -->
 
     <div
-        class="finish-line"
-        id="finishLine">
-    </div>
+        id="playerCar"
+        class="player">
 
-
-    <!-- PLAYER -->
-
-    <div
-        class="car"
-        id="playerCar">
         🏎️
+
     </div>
 
 
-    <!-- AI RACERS -->
+    <!-- AI CARS -->
 
     <div
-        class="car enemy"
-        id="enemy1">
+        id="ai1"
+        class="ai"
+        style="
+        top: 40px;
+        left: 30%;">
+
         🚗
+
     </div>
 
+
     <div
-        class="car enemy"
-        id="enemy2">
+        id="ai2"
+        class="ai"
+        style="
+        top: 160px;
+        left: 55%;">
+
         🚙
+
     </div>
 
+
     <div
-        class="car enemy"
-        id="enemy3">
+        id="ai3"
+        class="ai"
+        style="
+        top: 280px;
+        left: 40%;">
+
         🚓
+
     </div>
 
+
     <div
-        class="car enemy"
-        id="enemy4">
+        id="ai4"
+        class="ai"
+        style="
+        top: 100px;
+        left: 65%;">
+
         🏁
-    </div>
-
-
-    <!-- CONTROLS -->
-
-    <div class="controls">
-
-        <button
-            class="control-btn"
-            onclick="moveLeft()">
-            ⬅️
-        </button>
-
-        <button
-            class="control-btn"
-            onclick="moveRight()">
-            ➡️
-        </button>
 
     </div>
 
 
-    <!-- RESULT -->
+    <!-- COUNTDOWN -->
 
     <div
-        class="result-box"
-        id="resultBox">
+        id="countdown"
+        class="countdown">
 
-        <h2 id="resultTitle">
-            🏆 Race Finished!
-        </h2>
-
-        <p id="resultText"></p>
-
-        <button onclick="restartRace()">
-            🔄 Race Again
-        </button>
+        3
 
     </div>
+
+</div>
+
+
+<!-- =========================
+     CONTROLS
+========================= -->
+
+<div class="controls">
+
+    <button
+        onclick="moveLeft()">
+
+        ◀
+
+    </button>
+
+
+    <button
+        onclick="moveRight()">
+
+        ▶
+
+    </button>
+
+</div>
+
+
+<!-- =========================
+     RESULT BOX
+========================= -->
+
+<div
+    id="resultBox"
+    class="result-box">
+
+    <h1 id="resultTitle">
+        🏆 YOU WIN!
+    </h1>
+
+    <p id="resultMessage">
+        Race completed!
+    </p>
+
+
+    <button
+        onclick="nextLevel()">
+
+        ▶ NEXT LEVEL
+
+    </button>
+
+
+    <button
+        onclick="goLevels()">
+
+        📋 LEVELS
+
+    </button>
 
 </div>
 
 
 <script>
 
-/* =================================
-   PLAYER
-================================= */
+/* =========================
+   GAME DATA
+========================= */
+
+const sections = {
+
+    Village: {
+        start: 1,
+        end: 15,
+        boss: "Patlu"
+    },
+
+    City: {
+        start: 16,
+        end: 30,
+        boss: "Dr. Jhatka"
+    },
+
+    Mountain: {
+        start: 31,
+        end: 45,
+        boss: "Ghisatu"
+    },
+
+    Desert: {
+        start: 46,
+        end: 60,
+        boss: "Inspector Chingam"
+    },
+
+    "Snow Valley": {
+        start: 61,
+        end: 75,
+        boss: "John"
+    }
+
+};
+
+
+/* =========================
+   LOAD GAME DATA
+========================= */
+
+const currentLevel =
+    parseInt(
+        localStorage.getItem(
+            "currentLevel"
+        )
+    ) || 1;
+
+
+const selectedCharacter =
+    localStorage.getItem(
+        "selectedCharacter"
+    ) || "Motu";
+
+
+const selectedSection =
+    localStorage.getItem(
+        "selectedSection"
+    ) || "Village";
+
+
+const section =
+    sections[selectedSection];
+
+
+/* =========================
+   CHECK BOSS LEVEL
+========================= */
+
+const isBossLevel =
+    currentLevel === section.end;
+
+
+const bossCharacter =
+    section.boss;
+
+
+/* =========================
+   DISPLAY INFORMATION
+========================= */
+
+document.getElementById(
+    "sectionName"
+).innerText =
+    selectedSection;
+
+
+document.getElementById(
+    "levelText"
+).innerText =
+    "Level " + currentLevel;
+
+
+document.getElementById(
+    "playerName"
+).innerText =
+    selectedCharacter;
+
+
+if (isBossLevel) {
+
+    document.getElementById(
+        "bossName"
+    ).innerText =
+        "VS " + bossCharacter;
+
+    document.getElementById(
+        "raceType"
+    ).innerText =
+        "🏆 BOSS RACE";
+
+} else {
+
+    document.getElementById(
+        "bossName"
+    ).innerText =
+        "Race";
+
+    document.getElementById(
+        "raceType"
+    ).innerText =
+        "Normal Race";
+
+}
+    /* =========================
+   RACE VARIABLES
+========================= */
 
 const playerCar =
     document.getElementById("playerCar");
 
-const playerName =
-    localStorage.getItem("selectedCharacter") || "Motu";
+const ai1 =
+    document.getElementById("ai1");
 
-document.getElementById(
-    "playerName"
-).innerText = playerName;
+const ai2 =
+    document.getElementById("ai2");
 
+const ai3 =
+    document.getElementById("ai3");
 
-/* =================================
-   PLAYER POSITION
-================================= */
+const ai4 =
+    document.getElementById("ai4");
+
+const countdown =
+    document.getElementById("countdown");
+
 
 let playerPosition = 50;
 
-let playerDistance = 0;
+let playerProgress = 0;
+
+let opponentProgress = 0;
+
+let raceStarted = false;
+
+let raceFinished = false;
 
 
-/* =================================
-   AI DATA
-================================= */
+/* =========================
+   BOSS / NORMAL RACERS
+========================= */
 
-const enemies = [
+if (isBossLevel) {
 
-    {
-        element: document.getElementById("enemy1"),
-        name: "Patlu",
-        position: 30,
-        distance: 0,
-        speed: 2.3
-    },
+    /*
+    Boss race = only 1 opponent
+    */
 
-    {
-        element: document.getElementById("enemy2"),
-        name: "Dr. Jhatka",
-        position: 45,
-        distance: 0,
-        speed: 2.1
-    },
+    ai1.innerHTML = getCharacterEmoji(
+        bossCharacter
+    );
 
-    {
-        element: document.getElementById("enemy3"),
-        name: "Singham",
-        position: 60,
-        distance: 0,
-        speed: 2.5
-    },
+    ai1.style.left = "50%";
 
-    {
-        element: document.getElementById("enemy4"),
-        name: "Don",
-        position: 70,
-        distance: 0,
-        speed: 1.9
-    }
+    ai2.style.display = "none";
+    ai3.style.display = "none";
+    ai4.style.display = "none";
 
-];
+} else {
+
+    /*
+    Normal race
+    */
+
+    ai1.innerHTML = "🚗";
+    ai2.innerHTML = "🚙";
+    ai3.innerHTML = "🚓";
+    ai4.innerHTML = "🏁";
+
+}
 
 
-/* =================================
-   MOVE PLAYER LEFT
-================================= */
+/* =========================
+   CHARACTER EMOJI
+========================= */
+
+function getCharacterEmoji(name) {
+
+    const emojis = {
+
+        "Motu": "🏎️",
+
+        "Patlu": "🚗",
+
+        "Dr. Jhatka": "🚙",
+
+        "Ghisatu": "🏁",
+
+        "Inspector Chingam": "🚓",
+
+        "John": "🏎️"
+
+    };
+
+    return emojis[name] || "🚗";
+
+}
+
+
+/* =========================
+   PLAYER CAR
+========================= */
+
+playerCar.innerHTML =
+    getCharacterEmoji(
+        selectedCharacter
+    );
+
+
+/* =========================
+   MOVE LEFT
+========================= */
 
 function moveLeft() {
+
+    if (!raceStarted ||
+        raceFinished) {
+        return;
+    }
 
     playerPosition -= 5;
 
@@ -442,14 +778,20 @@ function moveLeft() {
 
     playerCar.style.left =
         playerPosition + "%";
+
 }
 
 
-/* =================================
-   MOVE PLAYER RIGHT
-================================= */
+/* =========================
+   MOVE RIGHT
+========================= */
 
 function moveRight() {
+
+    if (!raceStarted ||
+        raceFinished) {
+        return;
+    }
 
     playerPosition += 5;
 
@@ -459,174 +801,235 @@ function moveRight() {
 
     playerCar.style.left =
         playerPosition + "%";
+
 }
 
 
-/* =================================
-   KEYBOARD
-================================= */
+/* =========================
+   KEYBOARD CONTROLS
+========================= */
 
 document.addEventListener(
     "keydown",
     function(event) {
 
         if (event.key === "ArrowLeft") {
+
             moveLeft();
+
         }
 
         if (event.key === "ArrowRight") {
+
             moveRight();
+
         }
 
     }
 );
 
 
-/* =================================
+/* =========================
    COUNTDOWN
-================================= */
+========================= */
 
 let count = 3;
 
-const message =
-    document.getElementById("message");
 
-const countdown =
+const countdownTimer =
     setInterval(function() {
 
         count--;
 
-        if (count > 0) {
+        if (count === 2) {
 
-            message.innerText = count;
+            countdown.innerText =
+                "2";
 
-        } else {
+        }
 
-            clearInterval(countdown);
+        else if (count === 1) {
 
-            message.innerText =
-                "GO! 🏁";
+            countdown.innerText =
+                "1";
+
+        }
+
+        else if (count === 0) {
+
+            countdown.innerText =
+                "GO!";
+
+            raceStarted = true;
 
             startRace();
+
+            setTimeout(
+                function() {
+
+                    countdown.style.display =
+                        "none";
+
+                },
+                700
+            );
+
+            clearInterval(
+                countdownTimer
+            );
 
         }
 
     }, 1000);
 
 
-/* =================================
+/* =========================
    START RACE
-================================= */
-
-let raceStarted = false;
+========================= */
 
 function startRace() {
 
-    raceStarted = true;
+    const raceTimer =
+        setInterval(
+            function() {
 
-    requestAnimationFrame(
-        raceLoop
-    );
+                if (raceFinished) {
+
+                    clearInterval(
+                        raceTimer
+                    );
+
+                    return;
+                }
+
+
+                /*
+                Player progress
+                */
+
+                playerProgress +=
+                    Math.random() * 2.5 + 1;
+
+
+                /*
+                Opponent speed
+                */
+
+                if (isBossLevel) {
+
+                    /*
+                    Boss is stronger
+                    */
+
+                    opponentProgress +=
+                        Math.random() * 2.2 + 1.5;
+
+                } else {
+
+                    opponentProgress +=
+                        Math.random() * 2 + 1;
+
+                }
+
+
+                /*
+                Move AI cars
+                */
+
+                moveAI(
+                    ai1,
+                    opponentProgress
+                );
+
+
+                if (!isBossLevel) {
+
+                    moveAI(
+                        ai2,
+                        opponentProgress * 0.92
+                    );
+
+                    moveAI(
+                        ai3,
+                        opponentProgress * 0.88
+                    );
+
+                    moveAI(
+                        ai4,
+                        opponentProgress * 0.95
+                    );
+
+                }
+
+
+                /*
+                Check winner
+                */
+
+                if (playerProgress >= 100) {
+
+                    finishRace(true);
+
+                    clearInterval(
+                        raceTimer
+                    );
+
+                }
+
+                else if (
+                    opponentProgress >= 100
+                ) {
+
+                    finishRace(false);
+
+                    clearInterval(
+                        raceTimer
+                    );
+
+                }
+
+            },
+            100
+        );
+
 }
 
 
-/* =================================
-   RACE LOOP
-================================= */
+/* =========================
+   MOVE AI
+========================= */
 
-function raceLoop() {
+function moveAI(car, progress) {
 
-    if (!raceStarted) {
-        return;
+    const roadHeight =
+        window.innerHeight;
+
+    let topPosition =
+        40 + progress * 5;
+
+    if (
+        topPosition >
+        roadHeight - 100
+    ) {
+
+        topPosition =
+            40;
+
     }
 
+    car.style.top =
+        topPosition + "px";
 
-    /* PLAYER DISTANCE */
-
-    playerDistance += 2.6;
-
-
-    /* AI MOVEMENT */
-
-    enemies.forEach(function(enemy) {
-
-        enemy.distance += enemy.speed;
-
-        enemy.element.style.top =
-            (500 - enemy.distance) + "px";
-
-        enemy.element.style.left =
-            enemy.position + "%";
-
-    });
-
-
-    /* POSITION */
-
-    updatePosition();
-
-
-    /* CHECK WIN */
-
-    if (playerDistance >= 1000) {
-
-        finishRace(playerName);
-
-        return;
-    }
-
-
-    enemies.forEach(function(enemy) {
-
-        if (enemy.distance >= 1000) {
-
-            finishRace(enemy.name);
-
-        }
-
-    });
-
-
-    requestAnimationFrame(
-        raceLoop
-    );
 }
 
 
-/* =================================
-   UPDATE POSITION
-================================= */
-
-function updatePosition() {
-
-    let position = 1;
-
-    enemies.forEach(function(enemy) {
-
-        if (
-            enemy.distance >
-            playerDistance
-        ) {
-
-            position++;
-
-        }
-
-    });
-
-    document.getElementById(
-        "position"
-    ).innerText = position;
-}
-
-
-/* =================================
+/* =========================
    FINISH RACE
-================================= */
+========================= */
 
-function finishRace(winner) {
+function finishRace(playerWon) {
 
-    raceStarted = false;
+    raceFinished = true;
 
     const resultBox =
         document.getElementById(
@@ -638,50 +1041,315 @@ function finishRace(winner) {
             "resultTitle"
         );
 
-    const resultText =
+    const resultMessage =
         document.getElementById(
-            "resultText"
+            "resultMessage"
         );
-
-
-    if (winner === playerName) {
-
-        resultTitle.innerText =
-            "🏆 YOU WIN!";
-
-        resultText.innerText =
-            playerName +
-            " finished the race first!";
-
-    } else {
-
-        resultTitle.innerText =
-            "😢 YOU LOST!";
-
-        resultText.innerText =
-            winner +
-            " finished first.";
-
-    }
 
 
     resultBox.style.display =
         "block";
 
+
+    if (playerWon) {
+
+        resultTitle.innerText =
+            "🏆 YOU WIN!";
+
+        if (isBossLevel) {
+
+            resultMessage.innerText =
+                "🎉 You defeated " +
+                bossCharacter +
+                "!";
+
+            completeBossLevel();
+
+        } else {
+
+            resultMessage.innerText =
+                "🏁 Level " +
+                currentLevel +
+                " completed!";
+
+            completeNormalLevel();
+
+        }
+
+    } else {
+
+        resultTitle.innerText =
+            "❌ YOU LOST!";
+
+        if (isBossLevel) {
+
+            resultMessage.innerText =
+                "You must defeat " +
+                bossCharacter +
+                " to unlock the next Section.";
+
+        } else {
+
+            resultMessage.innerText =
+                "Try the race again!";
+
+        }
+
+    }
+
 }
 
 
-/* =================================
-   RESTART
-================================= */
+/* =========================
+   NORMAL LEVEL COMPLETE
+========================= */
 
-function restartRace() {
+function completeNormalLevel() {
 
-    location.reload();
+    let highestLevel =
+        parseInt(
+            localStorage.getItem(
+                "highestLevel"
+            )
+        ) || 1;
+
+
+    if (
+        currentLevel + 1 >
+        highestLevel
+    ) {
+
+        localStorage.setItem(
+            "highestLevel",
+            currentLevel + 1
+        );
+
+    }
+
+    localStorage.setItem(
+        "completedLevel",
+        currentLevel
+    );
 
 }
+
+
+/* =========================
+   BOSS LEVEL COMPLETE
+========================= */
+
+function completeBossLevel() {
+
+    let highestLevel =
+        parseInt(
+            localStorage.getItem(
+                "highestLevel"
+            )
+        ) || 1;
+
+
+    /*
+    Unlock the next level
+    */
+
+    if (
+        currentLevel + 1 >
+        highestLevel
+    ) {
+
+        localStorage.setItem(
+            "highestLevel",
+            currentLevel + 1
+        );
+
+    }
+
+
+    /*
+    Unlock defeated character
+    */
+
+    localStorage.setItem(
+        bossCharacter +
+        "_unlocked",
+        "true"
+    );
+
+
+    localStorage.setItem(
+        "completedBoss",
+        bossCharacter
+    );
+
+
+    /*
+    Mark section complete
+    */
+
+    localStorage.setItem(
+        selectedSection +
+        "_completed",
+        "true"
+    );
+
+    }
+    /* =========================
+   NEXT LEVEL
+========================= */
+
+function nextLevel() {
+
+    /*
+    Boss level completed
+    */
+
+    if (isBossLevel) {
+
+        /*
+        After Boss:
+        Go to next section
+        */
+
+        const nextSection =
+            getNextSection();
+
+        if (nextSection) {
+
+            localStorage.setItem(
+                "selectedSection",
+                nextSection
+            );
+
+            localStorage.setItem(
+                "currentLevel",
+                sections[nextSection].start
+            );
+
+            window.location.href =
+                "levels.html";
+
+            return;
+
+        }
+
+    }
+
+
+    /*
+    Normal level:
+    Go to next level
+    */
+
+    const nextLevelNumber =
+        currentLevel + 1;
+
+
+    if (
+        nextLevelNumber <=
+        section.end
+    ) {
+
+        localStorage.setItem(
+            "currentLevel",
+            nextLevelNumber
+        );
+
+        window.location.href =
+            "race.html";
+
+    } else {
+
+        window.location.href =
+            "levels.html";
+
+    }
+
+}
+
+
+/* =========================
+   GET NEXT SECTION
+========================= */
+
+function getNextSection() {
+
+    const sectionNames = [
+        "Village",
+        "City",
+        "Mountain",
+        "Desert",
+        "Snow Valley"
+    ];
+
+
+    const currentIndex =
+        sectionNames.indexOf(
+            selectedSection
+        );
+
+
+    if (
+        currentIndex === -1 ||
+        currentIndex >=
+        sectionNames.length - 1
+    ) {
+
+        return null;
+
+    }
+
+
+    return sectionNames[
+        currentIndex + 1
+    ];
+
+}
+
+
+/* =========================
+   GO TO LEVELS
+========================= */
+
+function goLevels() {
+
+    window.location.href =
+        "levels.html";
+
+}
+
+
+/* =========================
+   PAGE START
+========================= */
+
+console.log(
+    "🏎️ Race Started"
+);
+
+console.log(
+    "Section:",
+    selectedSection
+);
+
+console.log(
+    "Level:",
+    currentLevel
+);
+
+console.log(
+    "Player:",
+    selectedCharacter
+);
+
+console.log(
+    "Boss:",
+    isBossLevel
+        ? bossCharacter
+        : "None"
+);
 
 </script>
 
 </body>
-    </html>
+
+</html>
