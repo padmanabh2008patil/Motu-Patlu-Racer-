@@ -10,223 +10,103 @@ content="width=device-width, initial-scale=1.0">
 
 <title>Motu-Patlu Racer - Levels</title>
 
+<link rel="stylesheet" href="style.css">
+
 <style>
 
-* {
-    box-sizing: border-box;
-}
-
 body {
-
     margin: 0;
-
     font-family: Arial, sans-serif;
-
+    background: linear-gradient(135deg, #141e30, #243b55);
     color: white;
-
-    min-height: 100vh;
-
     text-align: center;
-
-    background:
-    linear-gradient(
-        135deg,
-        #111,
-        #292929,
-        #111
-    );
 }
 
-
-/* HEADER */
-
-.header {
-
-    padding: 25px;
-
-    background:
-    linear-gradient(
-        90deg,
-        #ff6b00,
-        #ffb300
-    );
-
-    box-shadow:
-    0 4px 15px rgba(0,0,0,0.5);
+header {
+    padding: 25px 15px;
+    background: linear-gradient(135deg, #ff9800, #e65100);
 }
 
-.header h1 {
-
+header h1 {
     margin: 0;
-
-    font-size: 32px;
-
-    text-shadow:
-    3px 3px 5px black;
+    font-size: 30px;
 }
 
-.header p {
-
-    margin-top: 8px;
-
+header p {
     font-size: 18px;
 }
 
-
-/* LEVEL SECTION */
-
-.level-section {
-
-    padding: 25px 15px;
-}
-
-.level-section h2 {
-
-    font-size: 27px;
-
-    margin-bottom: 25px;
-}
-
-
-/* LEVEL GRID */
-
-.levels {
-
+.levels-container {
+    width: 92%;
+    max-width: 800px;
+    margin: 25px auto;
     display: grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(130px, 1fr)
-    );
-
-    gap: 18px;
-
-    max-width: 700px;
-
-    margin: auto;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
 }
-
-
-/* LEVEL CARD */
 
 .level {
-
-    min-height: 120px;
-
-    border-radius: 18px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    font-size: 22px;
-
+    padding: 18px 5px;
+    border-radius: 12px;
+    font-size: 18px;
     font-weight: bold;
-
-    background:
-    linear-gradient(
-        145deg,
-        #333,
-        #181818
-    );
-
-    border: 3px solid #555;
-
-    box-shadow:
-    0 6px 15px rgba(0,0,0,0.5);
-
     cursor: pointer;
-
-    transition: 0.25s;
+    background: #eeeeee;
+    color: #222;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.3);
 }
-
 
 .level:hover {
-
-    transform:
-    translateY(-5px)
-    scale(1.03);
-
-    border-color:
-    #ff9800;
+    transform: scale(1.05);
 }
 
-
-/* UNLOCKED */
-
-.level.unlocked {
-
-    border-color:
-    #00e676;
+.locked {
+    background: #666;
+    color: #bbb;
+    cursor: not-allowed;
 }
 
-
-/* LOCKED */
-
-.level.locked {
-
-    opacity: 0.45;
-
-    cursor:
-    not-allowed;
-}
-
-
-.lock {
-
-    font-size: 30px;
-
-    margin-bottom: 8px;
-}
-
-
-/* BACK BUTTON */
-
-.back {
-
-    margin-top: 30px;
-
-    padding:
-    12px 30px;
-
-    border: none;
-
-    border-radius: 25px;
-
-    background:
-    #555;
-
+.boss {
+    background: #d32f2f;
     color: white;
+    border: 3px solid #ffd700;
+}
 
+.boss:hover {
+    transform: scale(1.05);
+}
+
+.boss small {
+    display: block;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.back-button {
+    margin: 10px auto 30px;
+    padding: 13px 30px;
+    border: none;
+    border-radius: 10px;
+    background: #ff9800;
+    color: white;
     font-size: 17px;
-
-    cursor: pointer;
+    font-weight: bold;
 }
 
-
-.back:hover {
-
-    background:
-    #777;
+footer {
+    padding: 20px;
+    background: #111;
 }
 
+@media (max-width: 600px) {
 
-/* MOBILE */
-
-@media(max-width:500px) {
-
-    .header h1 {
-        font-size: 27px;
+    .levels-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
 
     .level {
-        min-height: 105px;
-        font-size: 19px;
+        padding: 16px 3px;
     }
 
 }
@@ -238,70 +118,121 @@ body {
 
 <body>
 
+<header>
 
-<!-- HEADER -->
+<h1>🏎️ MOTU-PATLU RACER</h1>
 
-<div class="header">
+<p id="sectionTitle">
+Choose Your Level
+</p>
 
-    <h1>
-        🏎️ MOTU-PATLU RACER
-    </h1>
+</header>
 
-    <p>
-        🏁 Select Level
-    </p>
 
+<div
+    class="levels-container"
+    id="levelsContainer">
 </div>
 
 
-<!-- LEVELS -->
+<button
+    class="back-button"
+    onclick="goBack()">
 
-<div class="level-section">
+⬅️ BACK
 
-    <h2>
-        🌍 Racing Levels
-    </h2>
-
-
-    <div
-        class="levels"
-        id="levelsContainer">
-    </div>
+</button>
 
 
-    <button
-        class="back"
-        onclick="goBack()">
+<footer>
 
-        ← Back
+Motu-Patlu Racer © 2026
 
-    </button>
-
-</div>
+</footer>
 
 
 <script>
 
-/* ==============================
-   GAME PROGRESS
-============================== */
+/* =========================
+   SECTION SETTINGS
+========================= */
+
+const sections = {
+
+    Village: {
+        start: 1,
+        end: 15,
+        boss: "Patlu"
+    },
+
+    City: {
+        start: 16,
+        end: 30,
+        boss: "Dr. Jhatka"
+    },
+
+    Mountain: {
+        start: 31,
+        end: 45,
+        boss: "Ghisatu"
+    },
+
+    Desert: {
+        start: 46,
+        end: 60,
+        boss: "Inspector Chingam"
+    },
+
+    "Snow Valley": {
+        start: 61,
+        end: 75,
+        boss: "John"
+    }
+
+};
 
 
-/*
-   सुरुवातीला Level 1 unlocked
-*/
+/* =========================
+   GET SELECTED SECTION
+========================= */
+
+const selectedSection =
+    localStorage.getItem("selectedSection")
+    || "Village";
+
+
+const section =
+    sections[selectedSection];
+
+
+/* =========================
+   PLAYER PROGRESS
+========================= */
 
 let highestLevel =
     parseInt(
-        localStorage.getItem(
-            "highestLevel"
-        )
+        localStorage.getItem("highestLevel")
     ) || 1;
 
 
-/* ==============================
+/* =========================
+   SECTION TITLE
+========================= */
+
+document.getElementById(
+    "sectionTitle"
+).innerHTML =
+    "🌍 " +
+    selectedSection +
+    " — Levels " +
+    section.start +
+    " to " +
+    section.end;
+
+
+/* =========================
    CREATE LEVELS
-============================== */
+========================= */
 
 const container =
     document.getElementById(
@@ -310,103 +241,77 @@ const container =
 
 
 for (
-    let level = 1;
-    level <= 20;
+    let level = section.start;
+    level <= section.end;
     level++
 ) {
 
-    const card =
-        document.createElement(
-            "div"
-        );
+    const button =
+        document.createElement("div");
+
+    button.className = "level";
+
+    /* LAST LEVEL = BOSS */
+
+    if (level === section.end) {
+
+        button.classList.add("boss");
+
+        button.innerHTML =
+            "🏆 " +
+            level +
+            "<small>VS " +
+            section.boss +
+            "</small>";
+
+    } else {
+
+        button.innerHTML =
+            "🏁 " + level;
+
+    }
 
 
-    card.className =
-        "level";
-
-
-    /* UNLOCKED */
+    /* UNLOCK CHECK */
 
     if (level <= highestLevel) {
 
-        card.classList.add(
-            "unlocked"
-        );
+        button.onclick =
+            function() {
 
+                startLevel(level);
 
-        card.innerHTML = `
+            };
 
-            🏁
+    } else {
 
-            <div>
-                Level ${level}
-            </div>
+        button.classList.add("locked");
 
-            <small>
-                PLAY
-            </small>
+        button.innerHTML =
+            "🔒 " + level;
 
-        `;
+        if (level === section.end) {
 
-
-        card.onclick =
-        function() {
-
-            startLevel(level);
-
-        };
-
-
-    }
-
-
-    /* LOCKED */
-
-    else {
-
-        card.classList.add(
-            "locked"
-        );
-
-
-        card.innerHTML = `
-
-            <div class="lock">
-                🔒
-            </div>
-
-            <div>
-                Level ${level}
-            </div>
-
-        `;
-
-
-        card.onclick =
-        function() {
-
-            alert(
-                "🔒 Level " +
+            button.innerHTML =
+                "🔒 " +
                 level +
-                " is locked!\n\n" +
-                "Complete Level " +
-                (level - 1) +
-                " first."
-            );
+                "<small>VS " +
+                section.boss +
+                "</small>";
 
-        };
+        }
 
     }
 
 
-    container.appendChild(card);
+    container.appendChild(button);
 
 }
 
 
-/* ==============================
+/*=========================
    START LEVEL
-============================== */
+========================= */
 
 function startLevel(level) {
 
@@ -415,6 +320,30 @@ function startLevel(level) {
         level
     );
 
+    /*
+    Check if this is
+    the Boss Level
+    */
+
+    if (level === section.end) {
+
+        localStorage.setItem(
+            "currentBoss",
+            section.boss
+        );
+
+    } else {
+
+        localStorage.setItem(
+            "currentBoss",
+            ""
+        );
+
+    }
+
+    /*
+    Open Race
+    */
 
     window.location.href =
         "race.html";
@@ -422,19 +351,18 @@ function startLevel(level) {
 }
 
 
-/* ==============================
-   BACK
-============================== */
+/* =========================
+   BACK BUTTON
+========================= */
 
 function goBack() {
 
     window.location.href =
-        "index.html";
+        "sections.html";
 
 }
 
 </script>
-
 
 </body>
 
