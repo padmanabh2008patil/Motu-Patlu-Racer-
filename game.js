@@ -2,10 +2,8 @@
 // MOTU-PATLU-RACER GAME
 // ===============================
 
-// Selected character
 let selectedCharacter = "";
 
-// Character data
 const characters = {
     Motu: {
         unlocked: true,
@@ -47,7 +45,6 @@ function selectCharacter(name) {
 
     const character = characters[name];
 
-    // Locked character
     if (!character.unlocked) {
 
         alert(
@@ -62,12 +59,10 @@ function selectCharacter(name) {
 
     selectedCharacter = name;
 
-    // Remove previous selection
     document.querySelectorAll(".character-card").forEach(card => {
         card.classList.remove("selected");
     });
 
-    // Select current card
     const selectedCard = document.getElementById(name);
 
     if (selectedCard) {
@@ -103,16 +98,8 @@ function startGame() {
         "1"
     );
 
-    alert(
-        "🏁 Race Starting!\n\n" +
-        "Racer: " +
-        selectedCharacter +
-        "\n\n" +
-        "Level 1"
-    );
-
-    // Next step:
-    // window.location.href = "race.html";
+    // Open racing screen
+    window.location.href = "race.html";
 }
 
 
