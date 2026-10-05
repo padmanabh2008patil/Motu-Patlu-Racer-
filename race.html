@@ -1,356 +1,687 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Motu-Patlu Racer - Level 1</title>
+<title>Motu-Patlu Racer - Level 1</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #111;
+}
 
-        body {
-            overflow: hidden;
-            background: #222;
-        }
+/* TOP BAR */
 
-        .race-header {
-            height: 70px;
-            background: linear-gradient(90deg, #ff6b00, #ffb300);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
+.race-header {
+    height: 65px;
+    background: linear-gradient(90deg, #ff6b00, #ffb300);
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-weight: bold;
+    font-size: 17px;
+}
 
-        .race-area {
-            position: relative;
-            width: 100%;
-            height: calc(100vh - 130px);
-            overflow: hidden;
-            background:
-                linear-gradient(
-                    90deg,
-                    #238b45 0%,
-                    #238b45 18%,
-                    #555 18%,
-                    #555 82%,
-                    #238b45 82%,
-                    #238b45 100%
-                );
-        }
+/* RACE AREA */
 
-        /* Road Lines */
+.race-area {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 65px);
+    overflow: hidden;
 
-        .road-line {
-            position: absolute;
-            left: 50%;
-            width: 8px;
-            height: 80px;
-            background: white;
-            transform: translateX(-50%);
-            animation: roadMove 0.5s linear infinite;
-        }
+    background:
+        linear-gradient(
+            90deg,
+            #238b45 0%,
+            #238b45 15%,
+            #444 15%,
+            #444 85%,
+            #238b45 85%,
+            #238b45 100%
+        );
+}
 
-        .line1 {
-            top: 0;
-        }
+/* ROAD DIVIDER */
 
-        .line2 {
-            top: 160px;
-        }
+.road-line {
+    position: absolute;
+    left: 50%;
+    width: 7px;
+    height: 90px;
+    background: white;
+    transform: translateX(-50%);
+    animation: roadMove 0.45s linear infinite;
+}
 
-        .line3 {
-            top: 320px;
-        }
+.line1 { top: 0; }
+.line2 { top: 180px; }
+.line3 { top: 360px; }
+.line4 { top: 540px; }
+.line5 { top: 720px; }
 
-        .line4 {
-            top: 480px;
-        }
+@keyframes roadMove {
 
-        .line5 {
-            top: 640px;
-        }
+    from {
+        transform: translate(-50%, -120px);
+    }
 
-        @keyframes roadMove {
+    to {
+        transform: translate(-50%, 100vh);
+    }
+}
 
-            from {
-                transform: translate(-50%, -100px);
-            }
+/* CARS */
 
-            to {
-                transform: translate(-50%, 100vh);
-            }
+.car {
+    position: absolute;
+    width: 58px;
+    height: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    z-index: 5;
+}
 
-        }
+/* PLAYER */
 
-        /* Cars */
+#playerCar {
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
 
-        .car {
-            position: absolute;
-            width: 55px;
-            height: 85px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 38px;
-            transition: left 0.08s linear;
-        }
+/* AI */
 
-        #playerCar {
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
+.enemy {
+    top: -100px;
+}
 
-        .enemy1 {
-            top: 100px;
-            left: 35%;
-        }
+/* FINISH LINE */
 
-        .enemy2 {
-            top: 180px;
-            left: 60%;
-        }
+.finish-line {
+    position: absolute;
+    top: -100px;
+    left: 15%;
+    width: 70%;
+    height: 70px;
 
-        .enemy3 {
-            top: 300px;
-            left: 42%;
-        }
+    background:
+        repeating-linear-gradient(
+            45deg,
+            white 0px,
+            white 20px,
+            black 20px,
+            black 40px
+        );
 
-        .enemy4 {
-            top: 420px;
-            left: 65%;
-        }
+    z-index: 4;
+}
 
-        /* Controls */
+/* MESSAGE */
 
-        .controls {
-            position: absolute;
-            bottom: 15px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 25px;
-            z-index: 20;
-        }
+#message {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 
-        .control-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid white;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            font-size: 30px;
-            font-weight: bold;
-        }
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
 
-        .control-btn:active {
-            transform: scale(0.9);
-            background: #ff9800;
-        }
+    text-shadow: 3px 3px 5px black;
 
-        .race-message {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 30;
-            font-size: 25px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px black;
-        }
+    z-index: 30;
+}
 
-    </style>
+/* CONTROLS */
+
+.controls {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    z-index: 20;
+}
+
+.control-btn {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    border: 3px solid white;
+
+    background: rgba(0,0,0,0.65);
+
+    color: white;
+
+    font-size: 30px;
+}
+
+.control-btn:active {
+    transform: scale(0.9);
+    background: #ff9800;
+}
+
+/* RESULT BOX */
+
+.result-box {
+    display: none;
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 85%;
+    max-width: 400px;
+
+    padding: 30px;
+
+    background: rgba(0,0,0,0.95);
+
+    color: white;
+
+    border: 3px solid #ff9800;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    z-index: 100;
+}
+
+.result-box h2 {
+    color: #ffc107;
+}
+
+.result-box button {
+    margin-top: 15px;
+
+    padding: 12px 25px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    background: #ff9800;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
-    <div class="race-header">
+<!-- HEADER -->
 
-        <div>
-            🏁 LEVEL 1
-        </div>
+<div class="race-header">
 
-        <div>
-            🏎️ <span id="playerName">Motu</span>
-        </div>
+    <div>
+        🏁 LEVEL 1
+    </div>
 
-        <div>
-            🏆 Position:
-            <span id="position">1</span>
-        </div>
+    <div>
+        🏎️ <span id="playerName">Motu</span>
+    </div>
+
+    <div>
+        🏆 Position:
+        <span id="position">1</span>
+    </div>
+
+</div>
+
+
+<!-- RACE -->
+
+<div class="race-area">
+
+    <div id="message">
+        3
+    </div>
+
+
+    <!-- ROAD -->
+
+    <div class="road-line line1"></div>
+    <div class="road-line line2"></div>
+    <div class="road-line line3"></div>
+    <div class="road-line line4"></div>
+    <div class="road-line line5"></div>
+
+
+    <!-- FINISH -->
+
+    <div
+        class="finish-line"
+        id="finishLine">
+    </div>
+
+
+    <!-- PLAYER -->
+
+    <div
+        class="car"
+        id="playerCar">
+        🏎️
+    </div>
+
+
+    <!-- AI RACERS -->
+
+    <div
+        class="car enemy"
+        id="enemy1">
+        🚗
+    </div>
+
+    <div
+        class="car enemy"
+        id="enemy2">
+        🚙
+    </div>
+
+    <div
+        class="car enemy"
+        id="enemy3">
+        🚓
+    </div>
+
+    <div
+        class="car enemy"
+        id="enemy4">
+        🏁
+    </div>
+
+
+    <!-- CONTROLS -->
+
+    <div class="controls">
+
+        <button
+            class="control-btn"
+            onclick="moveLeft()">
+            ⬅️
+        </button>
+
+        <button
+            class="control-btn"
+            onclick="moveRight()">
+            ➡️
+        </button>
 
     </div>
 
 
-    <div class="race-area">
+    <!-- RESULT -->
 
-        <div class="race-message" id="message">
-            GO! 🏁
-        </div>
+    <div
+        class="result-box"
+        id="resultBox">
 
+        <h2 id="resultTitle">
+            🏆 Race Finished!
+        </h2>
 
-        <!-- Road Lines -->
+        <p id="resultText"></p>
 
-        <div class="road-line line1"></div>
-        <div class="road-line line2"></div>
-        <div class="road-line line3"></div>
-        <div class="road-line line4"></div>
-        <div class="road-line line5"></div>
-
-
-        <!-- Player -->
-
-        <div
-            class="car"
-            id="playerCar">
-            🏎️
-        </div>
-
-
-        <!-- AI Racers -->
-
-        <div class="car enemy1">
-            🚗
-        </div>
-
-        <div class="car enemy2">
-            🚙
-        </div>
-
-        <div class="car enemy3">
-            🚓
-        </div>
-
-        <div class="car enemy4">
-            🏁
-        </div>
-
-
-        <!-- Controls -->
-
-        <div class="controls">
-
-            <button
-                class="control-btn"
-                onclick="moveLeft()">
-                ⬅️
-            </button>
-
-            <button
-                class="control-btn"
-                onclick="moveRight()">
-                ➡️
-            </button>
-
-        </div>
+        <button onclick="restartRace()">
+            🔄 Race Again
+        </button>
 
     </div>
+
+</div>
 
 
 <script>
 
-    // ==========================
-    // PLAYER
-    // ==========================
+/* =================================
+   PLAYER
+================================= */
 
-    let playerCar =
-        document.getElementById("playerCar");
+const playerCar =
+    document.getElementById("playerCar");
 
-    let playerName =
-        localStorage.getItem("selectedCharacter");
+const playerName =
+    localStorage.getItem("selectedCharacter") || "Motu";
 
-    if (playerName) {
+document.getElementById(
+    "playerName"
+).innerText = playerName;
 
-        document.getElementById(
-            "playerName"
-        ).innerText = playerName;
 
+/* =================================
+   PLAYER POSITION
+================================= */
+
+let playerPosition = 50;
+
+let playerDistance = 0;
+
+
+/* =================================
+   AI DATA
+================================= */
+
+const enemies = [
+
+    {
+        element: document.getElementById("enemy1"),
+        name: "Patlu",
+        position: 30,
+        distance: 0,
+        speed: 2.3
+    },
+
+    {
+        element: document.getElementById("enemy2"),
+        name: "Dr. Jhatka",
+        position: 45,
+        distance: 0,
+        speed: 2.1
+    },
+
+    {
+        element: document.getElementById("enemy3"),
+        name: "Singham",
+        position: 60,
+        distance: 0,
+        speed: 2.5
+    },
+
+    {
+        element: document.getElementById("enemy4"),
+        name: "Don",
+        position: 70,
+        distance: 0,
+        speed: 1.9
     }
 
-
-    // ==========================
-    // PLAYER POSITION
-    // ==========================
-
-    let playerPosition = 50;
+];
 
 
-    // ==========================
-    // MOVE LEFT
-    // ==========================
+/* =================================
+   MOVE PLAYER LEFT
+================================= */
 
-    function moveLeft() {
+function moveLeft() {
 
-        playerPosition -= 5;
+    playerPosition -= 5;
 
-        if (playerPosition < 22) {
-            playerPosition = 22;
-        }
-
-        playerCar.style.left =
-            playerPosition + "%";
+    if (playerPosition < 22) {
+        playerPosition = 22;
     }
 
+    playerCar.style.left =
+        playerPosition + "%";
+}
 
-    // ==========================
-    // MOVE RIGHT
-    // ==========================
 
-    function moveRight() {
+/* =================================
+   MOVE PLAYER RIGHT
+================================= */
 
-        playerPosition += 5;
+function moveRight() {
 
-        if (playerPosition > 76) {
-            playerPosition = 76;
-        }
+    playerPosition += 5;
 
-        playerCar.style.left =
-            playerPosition + "%";
+    if (playerPosition > 78) {
+        playerPosition = 78;
     }
 
+    playerCar.style.left =
+        playerPosition + "%";
+}
 
-    // ==========================
-    // KEYBOARD CONTROL
-    // ==========================
 
-    document.addEventListener(
-        "keydown",
-        function(event) {
+/* =================================
+   KEYBOARD
+================================= */
 
-            if (event.key === "ArrowLeft") {
-                moveLeft();
-            }
+document.addEventListener(
+    "keydown",
+    function(event) {
 
-            if (event.key === "ArrowRight") {
-                moveRight();
-            }
+        if (event.key === "ArrowLeft") {
+            moveLeft();
+        }
+
+        if (event.key === "ArrowRight") {
+            moveRight();
+        }
+
+    }
+);
+
+
+/* =================================
+   COUNTDOWN
+================================= */
+
+let count = 3;
+
+const message =
+    document.getElementById("message");
+
+const countdown =
+    setInterval(function() {
+
+        count--;
+
+        if (count > 0) {
+
+            message.innerText = count;
+
+        } else {
+
+            clearInterval(countdown);
+
+            message.innerText =
+                "GO! 🏁";
+
+            startRace();
 
         }
+
+    }, 1000);
+
+
+/* =================================
+   START RACE
+================================= */
+
+let raceStarted = false;
+
+function startRace() {
+
+    raceStarted = true;
+
+    requestAnimationFrame(
+        raceLoop
     );
+}
 
 
-    // ==========================
-    // START MESSAGE
-    // ==========================
+/* =================================
+   RACE LOOP
+================================= */
 
-    setTimeout(function() {
+function raceLoop() {
 
+    if (!raceStarted) {
+        return;
+    }
+
+
+    /* PLAYER DISTANCE */
+
+    playerDistance += 2.6;
+
+
+    /* AI MOVEMENT */
+
+    enemies.forEach(function(enemy) {
+
+        enemy.distance += enemy.speed;
+
+        enemy.element.style.top =
+            (500 - enemy.distance) + "px";
+
+        enemy.element.style.left =
+            enemy.position + "%";
+
+    });
+
+
+    /* POSITION */
+
+    updatePosition();
+
+
+    /* CHECK WIN */
+
+    if (playerDistance >= 1000) {
+
+        finishRace(playerName);
+
+        return;
+    }
+
+
+    enemies.forEach(function(enemy) {
+
+        if (enemy.distance >= 1000) {
+
+            finishRace(enemy.name);
+
+        }
+
+    });
+
+
+    requestAnimationFrame(
+        raceLoop
+    );
+}
+
+
+/* =================================
+   UPDATE POSITION
+================================= */
+
+function updatePosition() {
+
+    let position = 1;
+
+    enemies.forEach(function(enemy) {
+
+        if (
+            enemy.distance >
+            playerDistance
+        ) {
+
+            position++;
+
+        }
+
+    });
+
+    document.getElementById(
+        "position"
+    ).innerText = position;
+}
+
+
+/* =================================
+   FINISH RACE
+================================= */
+
+function finishRace(winner) {
+
+    raceStarted = false;
+
+    const resultBox =
         document.getElementById(
-            "message"
-        ).innerText = "RACE! 🏎️💨";
+            "resultBox"
+        );
 
-    }, 1500);
+    const resultTitle =
+        document.getElementById(
+            "resultTitle"
+        );
 
+    const resultText =
+        document.getElementById(
+            "resultText"
+        );
+
+
+    if (winner === playerName) {
+
+        resultTitle.innerText =
+            "🏆 YOU WIN!";
+
+        resultText.innerText =
+            playerName +
+            " finished the race first!";
+
+    } else {
+
+        resultTitle.innerText =
+            "😢 YOU LOST!";
+
+        resultText.innerText =
+            winner +
+            " finished first.";
+
+    }
+
+
+    resultBox.style.display =
+        "block";
+
+}
+
+
+/* =================================
+   RESTART
+================================= */
+
+function restartRace() {
+
+    location.reload();
+
+}
 
 </script>
 
 </body>
-</html>
+    </html>
