@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Motu-Patlu Racer — 3D Race</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#72c8ff}
+body{touch-action:none}
+#game{position:relative;width:100vw;height:100vh;overflow:hidden;background:linear-gradient(#72c8ff 0 48%,#8bd45a 48% 100%)}
+.sky{position:absolute;inset:0 0 48%;background:linear-gradient(#43a9ed,#bcecff);z-index:0}
+.sun{position:absolute;width:75px;height:75px;border-radius:50%;background:#ffe66d;right:12%;top:8%;box-shadow:0 0 35px #fff2a8}
+.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.8}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:55px;height:55px;left:18px;top:-22px}
+.cloud:after{width:70px;height:70px;right:15px;top:-32px}
+.c1{width:120px;height:28px;left:8%;top:16%}.c2{width:145px;height:30px;right:15%;top:25%}
+
+.hills{position:absolute;left:0;right:0;top:36%;height:22%;z-index:1;background:
+radial-gradient(ellipse at 12% 100%,#4d9b52 0 28%,transparent 29%),
+radial-gradient(ellipse at 38% 100%,#3f8f4c 0 32%,transparent 33%),
+radial-gradient(ellipse at 70% 100%,#559f4d 0 31%,transparent 32%),
+radial-gradient(ellipse at 94% 100%,#438e4a 0 30%,transparent 31%);
+}
+.ground{position:absolute;left:0;right:0;top:48%;bottom:0;background:#62b64c;z-index:2}
+
+.track{
+ position:absolute;left:50%;top:45%;width:100%;height:65%;
+ transform:translateX(-50%);
+ background:#35383d;
+ clip-path:polygon(34% 0,66% 0,96% 100%,4% 100%);
+ z-index:3;
+ box-shadow:inset 0 0 0 5px rgba(255,255,255,.25);
+}
+.edge.left,.edge.right{position:absolute;top:45%;height:65%;width:8px;background:#f4f4f4;z-index:4}
+.edge.left{left:calc(50% - 16vw);transform:skewX(-14deg)}
+.edge.right{right:calc(50% - 16vw);transform:skewX(14deg)}
+
+.lane-line{
+ position:absolute;left:50%;width:10px;height:75px;background:#fff;z-index:5;
+ transform:translateX(-50%);
+ opacity:.9;border-radius:3px
+}
+.line1{top:52%}.line2{top:67%}.line3{top:82%}.line4{top:97%}
+
+.scenery{position:absolute;inset:45% 0 0;z-index:6;pointer-events:none}
+.tree{position:absolute;width:42px;height:70px}
+.tree:before{content:"";position:absolute;bottom:0;left:17px;width:9px;height:28px;background:#795548}
+.tree:after{content:"🌳";position:absolute;font-size:55px;top:-10px;left:-5px}
+.t1{left:4%;top:8%}.t2{right:4%;top:22%}.t3{left:13%;top:43%}.t4{right:13%;top:54%}
+.rock{position:absolute;font-size:35px}.r1{left:23%;top:30%}.r2{right:23%;top:42%}
+
+#hud{
+ position:absolute;top:0;left:0;right:0;z-index:30;
+ display:flex;justify-content:space-between;align-items:center;
+ padding:10px 12px;color:#fff;text-shadow:1px 2px 3px #000;
+ background:linear-gradient(#0009,transparent);font-weight:bold
+}
+.hudbox{background:#1119;padding:7px 10px;border-radius:12px;min-width:75px;text-align:center}
+.hudsmall{font-size:11px;opacity:.85}.hudbig{font-size:17px}
+
+#raceCanvas{position:absolute;inset:0;z-index:12;pointer-events:none}
+.car{
+ position:absolute;z-index:20;left:50%;bottom:11%;
+ width:82px;height:118px;transform:translateX(-50%);
+ filter:drop-shadow(0 10px 7px #0008);
+ transition:left .08s linear
+}
+.carbody{
+ position:absolute;left:9px;top:22px;width:64px;height:82px;border-radius:20px 20px 12px 12px;
+ background:linear-gradient(90deg,#e85b16,#ffb52e 48%,#c83d0b);
+ border:3px solid #fff8;box-shadow:inset 8px 0 12px #fff4
+}
+.window{position:absolute;left:18px;top:31px;width:46px;height:30px;background:#8de0ff;border-radius:12px 12px 7px 7px;border:3px solid #333}
+.wheel{position:absolute;width:17px;height:35px;background:#171717;border-radius:8px;top:48px}
+.wl{left:0}.wr{right:0}
+.light{position:absolute;width:12px;height:9px;background:#ffe36e;border-radius:5px;bottom:14px}
+.ll{left:17px}.lr{right:17px}
+#playerLabel{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:12px;font-weight:bold;color:#fff;background:#e65100;padding:3px 9px;border-radius:8px;white-space:nowrap}
+
+.ai{
+ position:absolute;z-index:17;width:62px;height:90px;
+ transform:translate(-50%,-50%);filter:drop-shadow(0 7px 5px #0007)
+}
+.ai .body{position:absolute;left:8px;top:12px;width:46px;height:63px;border-radius:15px;background:#3478d4;border:2px solid #fff8}
+.ai .window{left:13px;top:20px;width:36px;height:23px}
+.ai .w1,.ai .w2{position:absolute;top:38px;width:13px;height:28px;background:#171717;border-radius:7px}
+.ai .w1{left:0}.ai .w2{right:0}
+#ai1{left:50%;top:35%;display:none}
+#ai2{left:44%;top:29%;display:none}
+#ai3{left:56%;top:23%;display:none}
+
+#countdown{
+ position:absolute;z-index:60;left:50%;top:48%;transform:translate(-50%,-50%);
+ font-size:82px;font-weight:900;color:#fff;text-shadow:0 5px 0 #e65100,0 0 25px #000;
+}
+#boost{
+ position:absolute;z-index:35;right:12px;bottom:92px;
+ width:75px;height:75px;border-radius:50%;border:3px solid #fff;
+ background:radial-gradient(circle,#ffd54f,#ff6d00);color:#fff;font-weight:900;
+ box-shadow:0 4px 15px #0008;font-size:12px
+}
+#boost:active{transform:scale(.93)}
+
+.controls{position:absolute;z-index:40;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none}
+.ctrl{
+ pointer-events:auto;width:82px;height:62px;border:0;border-radius:18px;
+ background:#111b;color:#fff;font-size:31px;font-weight:bold;border:2px solid #fff6
+}
+.ctrl:active{background:#e65100;transform:scale(.94)}
+
+#finish{
+ display:none;position:absolute;z-index:100;inset:0;background:#000b;
+ align-items:center;justify-content:center;padding:20px
+}
+.panel{
+ width:min(390px,92vw);background:linear-gradient(145deg,#17202b,#0b1016);
+ border:3px solid #ff9800;border-radius:24px;padding:28px 18px;text-align:center;
+ box-shadow:0 20px 60px #000
+}
+.panel h1{font-size:32px;margin:0 0 10px}.panel p{font-size:17px;line-height:1.5}
+.panel button{display:block;width:100%;margin:10px 0;padding:14px;border:0;border-radius:13px;background:#ff9800;color:#fff;font-size:17px;font-weight:bold}
+.panel button.secondary{background:#455a64}
+#bossBadge{display:none;background:#b71c1c;padding:4px 8px;border-radius:8px;font-size:11px;margin-top:4px}
+
+@media(max-width:600px){
+ .track{top:43%;height:67%}
+ .edge.left,.edge.right{top:43%;height:67%}
+ .car{bottom:12%;transform:translateX(-50%) scale(.88)}
+ .hudbox{min-width:65px;padding:5px 7px}.hudbig{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div id="game">
+  <div class="sky"></div><div class="sun"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div>
+  <div class="hills"></div><div class="ground"></div>
+
+  <div class="track"></div>
+  <div class="edge left"></div><div class="edge right"></div>
+  <div class="lane-line line1"></div><div class="lane-line line2"></div>
+  <div class="lane-line line3"></div><div class="lane-line line4"></div>
+
+  <div class="scenery">
+    <div class="tree t1"></div><div class="tree t2"></div>
+    <div class="tree t3"></div><div class="tree t4"></div>
+    <div class="rock r1">🪨</div><div class="rock r2">🪨</div>
+  </div>
+
+  <div id="hud">
+    <div class="hudbox"><div class="hudsmall" id="sectionName">Village</div><div class="hudbig" id="levelText">LEVEL 1</div></div>
+    <div class="hudbox"><div class="hudsmall">POSITION</div><div class="hudbig" id="position">1 / 4</div></div>
+    <div class="hudbox"><div class="hudsmall">SPEED</div><div class="hudbig" id="speed">0 km/h</div></div>
+  </div>
+
+  <div id="countdown">3</div>
+
+  <div id="player" class="car">
+    <div id="playerLabel">MOTU</div>
+    <div class="carbody"><div class="window"></div><div class="wheel wl"></div><div class="wheel wr"></div><div class="light ll"></div><div class="light lr"></div></div>
+  </div>
+
+  <div id="ai1" class="ai"><div class="body"><div class="window"></div><div class="w1"></div><div class="w2"></div></div></div>
+  <div id="ai2" class="ai"><div class="body" style="background:#d93434"><div class="window"></div><div class="w1"></div><div class="w2"></div></div></div>
+  <div id="ai3" class="ai"><div class="body" style="background:#7b43d8"><div class="window"></div><div class="w1"></div><div class="w2"></div></div></div>
+
+  <button id="boost" onclick="useBoost()">⚡<br>BOOST</button>
+  <div class="controls">
+    <button class="ctrl" id="leftBtn">◀</button>
+    <button class="ctrl" id="rightBtn">▶</button>
+  </div>
+
+  <div id="finish">
+    <div class="panel">
+      <h1 id="finishTitle">🏆 YOU WIN!</h1>
+      <p id="finishText"></p>
+      <button id="nextBtn" onclick="nextLevel()">▶ NEXT LEVEL</button>
+      <button class="secondary" onclick="goLevels()">📋 LEVELS</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const sections={
+ Village:{start:1,end:15,boss:"Patlu"},
+ City:{start:16,end:30,boss:"Dr. Jhatka"},
+ Mountain:{start:31,end:45,boss:"Ghisatu"},
+ Desert:{start:46,end:60,boss:"Inspector Chingam"},
+ "Snow Valley":{start:61,end:75,boss:"John"}
+};
+
+const level=parseInt(localStorage.getItem("currentLevel"))||1;
+const selectedSection=localStorage.getItem("selectedSection")||"Village";
+const selectedCharacter=localStorage.getItem("selectedCharacter")||"Motu";
+const section=sections[selectedSection]||sections.Village;
+const isBoss=level===section.end;
+
+const sectionEl=document.getElementById("sectionName");
+const levelEl=document.getElementById("levelText");
+const playerLabel=document.getElementById("playerLabel");
+sectionEl.textContent=selectedSection;
+levelEl.textContent="LEVEL "+level;
+playerLabel.textContent=selectedCharacter.toUpperCase();
+
+const player=document.getElementById("player");
+const ai=[document.getElementById("ai1"),document.getElementById("ai2"),document.getElementById("ai3")];
+
+if(isBoss){
+  ai[0].style.display="block";
+  ai[1].style.display="none";ai[2].style.display="none";
+  ai[0].querySelector(".body").style.background="#e65100";
+}else{
+  ai.forEach(x=>x.style.display="block");
+}
+
+let playerX=50, distance=0, boost=0, started=false, finished=false;
+let opponents=isBoss?[0]:[0,0,0];
+let speed=0;
+
+function setPlayer(){
+  player.style.left=playerX+"%";
+}
+function move(dir){
+  if(!started||finished)return;
+  playerX+=dir*5;
+  if(playerX<25)playerX=25;
+  if(playerX>75)playerX=75;
+  setPlayer();
+}
+document.getElementById("leftBtn").addEventListener("pointerdown",()=>move(-1));
+document.getElementById("rightBtn").addEventListener("pointerdown",()=>move(1));
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowLeft")move(-1);
+ if(e.key==="ArrowRight")move(1);
+ if(e.code==="Space")useBoost();
+});
+
+function useBoost(){
+ if(!started||finished||boost>0)return;
+ boost=4;
+ speed=145;
+}
+
+function start(){
+ started=true;
+ let last=performance.now();
+ function loop(now){
+   if(finished)return;
+   const dt=Math.min(.05,(now-last)/1000);last=now;
+
+   if(boost>0)boost-=dt;
+   const base=boost>0?1.55:1;
+   speed=95*base+Math.random()*12;
+   distance+=dt*base*10.5;
+
+   // fake 3D road motion
+   document.querySelectorAll(".lane-line").forEach((line,i)=>{
+      let y=(parseFloat(line.dataset.y||(-15+i*24))+dt*42*base);
+      if(y>105)y=-12;
+      line.dataset.y=y;
+      line.style.top=y+"%";
+   });
+
+   document.querySelectorAll(".tree,.rock").forEach((o,i)=>{
+      let y=(parseFloat(o.dataset.y||((i*17)%80))+dt*18*base);
+      if(y>100)y=-10;
+      o.dataset.y=y;o.style.top=y+"%";
+   });
+
+   opponents=opponents.map((p,i)=>p+dt*(isBoss?(9.3+Math.sin(distance+i)*.5):(8.3+i*.35+Math.random()*.4)));
+   const progress=distance;
+
+   const all=[progress,...opponents];
+   const rank=1+all.filter(x=>x>progress).length;
+   document.getElementById("position").textContent=rank+" / "+(isBoss?2:4);
+   document.getElementById("speed").textContent=Math.round(speed)+" km/h";
+
+   // AI cars move toward camera as their progress increases.
+   ai.forEach((car,i)=>{
+      if(car.style.display==="none")return;
+      const p=opponents[i]||0;
+      const t=Math.min(1,p/105);
+      car.style.top=(30+t*48)+"%";
+      const lane=[43,56,49][i];
+      car.style.left=lane+"%";
+      car.style.transform="translate(-50%,-50%) scale("+(0.55+t*.65)+")";
+   });
+
+   // Finish line.
+   if(distance>=100){
+      finish(true);
+      return;
+   }
+   const fastestOpp=Math.max(...opponents);
+   if(fastestOpp>=100){
+      finish(false);
+      return;
+   }
+   requestAnimationFrame(loop);
+ }
+ requestAnimationFrame(loop);
+}
+
+function finish(win){
+ finished=true;
+ document.getElementById("finish").style.display="flex";
+ const title=document.getElementById("finishTitle");
+ const text=document.getElementById("finishText");
+ const next=document.getElementById("nextBtn");
+
+ if(win){
+   title.textContent="🏆 YOU WIN!";
+   if(isBoss){
+     text.textContent="🎉 You defeated "+section.boss+"! The next section and character are unlocked.";
+     localStorage.setItem(section.boss+"_unlocked","true");
+     localStorage.setItem(selectedSection+"_completed","true");
+     localStorage.setItem("completedBoss",section.boss);
+     localStorage.setItem("highestLevel",String(Math.max(parseInt(localStorage.getItem("highestLevel"))||1,level+1)));
+   }else{
+     text.textContent="🏁 Level "+level+" completed! Great race!";
+     localStorage.setItem("completedLevel",String(level));
+     localStorage.setItem("highestLevel",String(Math.max(parseInt(localStorage.getItem("highestLevel"))||1,level+1)));
+   }
+ }else{
+   title.textContent="❌ YOU LOST!";
+   text.textContent=isBoss?"Defeat "+section.boss+" to unlock the next section.":"Try again and reach the finish first!";
+   next.textContent="🔄 RETRY";
+   next.onclick=()=>location.reload();
+ }
+}
+
+function nextLevel(){
+ if(!finished)return;
+ if(isBoss){
+   const names=["Village","City","Mountain","Desert","Snow Valley"];
+   const idx=names.indexOf(selectedSection);
+   if(idx>=0&&idx<names.length-1){
+     const nextSection=names[idx+1];
+     localStorage.setItem("selectedSection",nextSection);
+     localStorage.setItem("currentLevel",String(sections[nextSection].start));
+   }
+   window.location.href="levels.html";
+ }else{
+   localStorage.setItem("currentLevel",String(level+1));
+   window.location.href="race.html";
+ }
+}
+function goLevels(){window.location.href="levels.html"}
+
+let n=3;
+const cd=document.getElementById("countdown");
+const timer=setInterval(()=>{
+ n--;
+ if(n>0)cd.textContent=n;
+ else{
+   cd.textContent="GO!";
+   setTimeout(()=>cd.style.display="none",500);
+   clearInterval(timer);start();
+ }
+},1000);
+</script>
+</body>
+</html>
