@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Motu-Patlu Racer — Race</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif}
+body{background:#69c4ef;touch-action:none}
+#game{position:relative;width:100vw;height:100vh;overflow:hidden;background:linear-gradient(#58bdf0 0 44%,#64b84e 44% 100%)}
+
+/* SKY */
+.sky{position:absolute;inset:0 0 45%;background:linear-gradient(#39a9e7,#c8f1ff);z-index:0}
+.sun{position:absolute;right:10%;top:8%;width:70px;height:70px;border-radius:50%;background:#ffe66d;box-shadow:0 0 30px #fff7a0}
+.cloud{position:absolute;width:100px;height:25px;background:#fff;border-radius:30px;opacity:.9}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:45px;height:45px;left:15px;top:-20px}
+.cloud:after{width:55px;height:55px;right:12px;top:-28px}
+.c1{left:8%;top:16%}.c2{right:17%;top:25%;transform:scale(.8)}
+
+.hills{position:absolute;left:0;right:0;top:35%;height:18%;z-index:1;
+background:
+radial-gradient(ellipse at 8% 100%,#4d9550 0 25%,transparent 26%),
+radial-gradient(ellipse at 38% 100%,#438e4b 0 32%,transparent 33%),
+radial-gradient(ellipse at 72% 100%,#51974e 0 30%,transparent 31%),
+radial-gradient(ellipse at 100% 100%,#438b49 0 27%,transparent 28%)}
+.ground{position:absolute;left:0;right:0;top:45%;bottom:0;background:#65b74e;z-index:2}
+
+/* PERSPECTIVE ROAD */
+.road{
+position:absolute;z-index:4;left:50%;top:35%;width:100%;height:72%;
+transform:translateX(-50%);
+background:#34383d;
+clip-path:polygon(38% 0,62% 0,98% 100%,2% 100%);
+box-shadow:inset 0 0 0 4px #ffffff55}
+.roadEdge{position:absolute;z-index:5;top:35%;height:72%;width:5px;background:#fff}
+.edgeL{left:calc(50% - 12vw);transform:skewX(-17deg)}
+.edgeR{right:calc(50% - 12vw);transform:skewX(17deg)}
+
+.lane{
+position:absolute;z-index:6;left:50%;transform:translateX(-50%);
+width:7px;height:65px;background:#fff;border-radius:5px;opacity:.9}
+.l1{top:41%}.l2{top:56%}.l3{top:71%}.l4{top:86%}.l5{top:101%}
+
+/* SIDE OBJECTS */
+.tree{position:absolute;z-index:7;font-size:48px;filter:drop-shadow(0 5px 3px #0004)}
+.t1{left:3%;top:48%}.t2{right:3%;top:53%}.t3{left:10%;top:68%}.t4{right:9%;top:72%}
+.rock{position:absolute;z-index:8;font-size:30px}.r1{left:21%;top:63%}.r2{right:20%;top:59%}
+
+/* HUD */
+#hud{position:absolute;z-index:50;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:9px 10px;color:#fff;text-shadow:1px 2px 3px #000;background:linear-gradient(#0009,transparent)}
+.box{background:#111c;border-radius:11px;padding:5px 9px;text-align:center;min-width:66px}
+.small{font-size:10px}.big{font-size:15px;font-weight:900}
+
+/* CAR — REAR VIEW, all cars face same direction */
+.car{
+position:absolute;z-index:25;width:66px;height:94px;
+transform:translate(-50%,-50%);
+filter:drop-shadow(0 8px 5px #0009);
+transition:left .08s linear}
+.car .body{
+position:absolute;left:9px;top:18px;width:48px;height:62px;
+border-radius:13px 13px 9px 9px;
+background:linear-gradient(90deg,#bd3508,#ff7a16 45%,#c83d09);
+border:2px solid #ffffff88}
+.car .rearWindow{
+position:absolute;left:13px;top:25px;width:40px;height:22px;
+border-radius:6px 6px 4px 4px;background:linear-gradient(#7ad8ff,#244e6a);
+border:2px solid #222}
+.car .bumper{position:absolute;left:7px;bottom:8px;width:52px;height:8px;background:#333;border-radius:4px}
+.car .wheel{position:absolute;top:38px;width:11px;height:28px;background:#111;border-radius:6px}
+.car .wl{left:0}.car .wr{right:0}
+.car .tail{position:absolute;bottom:17px;width:9px;height:7px;background:#ff1d1d;border-radius:3px;box-shadow:0 0 6px #f00}
+.car .tl{left:14px}.car .tr{right:14px}
+#player{left:50%;top:84%;width:78px;height:108px}
+#player .body{left:10px;top:22px;width:58px;height:70px;background:linear-gradient(90deg,#d9480b,#ffad2f 48%,#c93607);border-radius:17px 17px 11px 11px}
+#player .rearWindow{left:15px;top:31px;width:48px;height:27px}
+#player .wheel{top:47px;width:14px;height:32px}
+#player .tl,#player .tr{bottom:20px}
+#playerLabel{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;background:#e65100;color:#fff;padding:2px 7px;border-radius:7px;white-space:nowrap;font-weight:bold}
+
+/* AI cars start AHEAD, smaller because of perspective */
+.ai{display:block;position:absolute;z-index:20;left:50%;top:38%;width:55px;height:78px;transform:translate(-50%,-50%) scale(.62);filter:drop-shadow(0 6px 4px #0008)}
+.ai .body{position:absolute;left:8px;top:15px;width:39px;height:53px;border-radius:11px 11px 7px 7px;background:#2779d4;border:2px solid #fff8}
+.ai .rearWindow{position:absolute;left:11px;top:21px;width:33px;height:18px;border-radius:5px;background:#7bd8ff;border:2px solid #222}
+.ai .wheel{position:absolute;top:32px;width:9px;height:24px;background:#111;border-radius:5px}
+.ai .wl{left:0}.ai .wr{right:0}
+.ai .tail{position:absolute;bottom:13px;width:7px;height:6px;background:#ff2020;border-radius:2px}
+.ai .tl{left:12px}.ai .tr{right:12px}
+
+/* COUNTDOWN */
+#countdown{position:absolute;z-index:90;left:50%;top:47%;transform:translate(-50%,-50%);font-size:78px;font-weight:900;color:#fff;text-shadow:0 5px #e65100,0 0 20px #000}
+
+/* CONTROLS */
+.controls{position:absolute;z-index:70;left:10px;right:10px;bottom:12px;display:flex;justify-content:space-between}
+.ctrl{width:78px;height:58px;border:2px solid #fff7;border-radius:17px;background:#111c;color:#fff;font-size:30px;font-weight:bold}
+.ctrl:active{background:#e65100;transform:scale(.94)}
+#boost{position:absolute;z-index:70;right:13px;bottom:82px;width:70px;height:70px;border-radius:50%;border:3px solid #fff;background:radial-gradient(circle,#ffe066,#ff6d00);color:#fff;font-weight:900;box-shadow:0 5px 15px #0008}
+#boost:active{transform:scale(.94)}
+
+#finish{display:none;position:absolute;z-index:100;inset:0;background:#000b;align-items:center;justify-content:center;padding:20px}
+.panel{width:min(380px,92vw);background:#101820;border:3px solid #ff9800;border-radius:22px;padding:26px 17px;text-align:center;box-shadow:0 20px 60px #000}
+.panel h1{margin:0 0 10px;font-size:30px;color:#fff}
+.panel p{color:#fff;font-size:16px;line-height:1.45}
+.panel button{width:100%;border:0;border-radius:12px;padding:13px;margin-top:9px;background:#ff9800;color:#fff;font-size:17px;font-weight:bold}
+.panel .secondary{background:#455a64}
+
+@media(max-width:600px){
+ .road,.roadEdge{top:35%}
+ #player{top:84%}
+}
+</style>
+</head>
+<body>
+<div id="game">
+<div class="sky"></div><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div>
+<div class="hills"></div><div class="ground"></div>
+<div class="road"></div><div class="roadEdge edgeL"></div><div class="roadEdge edgeR"></div>
+<div class="lane l1"></div><div class="lane l2"></div><div class="lane l3"></div><div class="lane l4"></div><div class="lane l5"></div>
+<div class="tree t1">🌳</div><div class="tree t2">🌳</div><div class="tree t3">🌳</div><div class="tree t4">🌳</div>
+<div class="rock r1">🪨</div><div class="rock r2">🪨</div>
+
+<div id="hud">
+ <div class="box"><div class="small" id="section">Village</div><div class="big" id="level">LEVEL 1</div></div>
+ <div class="box"><div class="small">POSITION</div><div class="big" id="pos">1 / 4</div></div>
+ <div class="box"><div class="small">SPEED</div><div class="big" id="spd">0</div></div>
+</div>
+
+<div id="countdown">3</div>
+
+<!-- Player: fixed near bottom, viewed from behind -->
+<div id="player" class="car">
+ <div id="playerLabel">MOTU</div>
+ <div class="body"><div class="rearWindow"></div><div class="wheel wl"></div><div class="wheel wr"></div><div class="tail tl"></div><div class="tail tr"></div><div class="bumper"></div></div>
+</div>
+
+<!-- Opponents: all are ahead and viewed from behind -->
+<div id="ai1" class="ai">
+ <div class="body"><div class="rearWindow"></div><div class="wheel wl"></div><div class="wheel wr"></div><div class="tail tl"></div><div class="tail tr"></div></div>
+</div>
+<div id="ai2" class="ai">
+ <div class="body" style="background:#d73535"><div class="rearWindow"></div><div class="wheel wl"></div><div class="wheel wr"></div><div class="tail tl"></div><div class="tail tr"></div></div>
+</div>
+<div id="ai3" class="ai">
+ <div class="body" style="background:#7443d1"><div class="rearWindow"></div><div class="wheel wl"></div><div class="wheel wr"></div><div class="tail tl"></div><div class="tail tr"></div></div>
+</div>
+
+<button id="boost" onclick="boost()">⚡<br>BOOST</button>
+<div class="controls"><button class="ctrl" onclick="move(-1)">◀</button><button class="ctrl" onclick="move(1)">▶</button></div>
+
+<div id="finish">
+ <div class="panel">
+  <h1 id="result">🏆 YOU WIN!</h1>
+  <p id="message"></p>
+  <button id="next" onclick="nextLevel()">▶ NEXT LEVEL</button>
+  <button class="secondary" onclick="location.href='levels.html'">📋 LEVELS</button>
+ </div>
+</div>
+</div>
+
+<script>
+const sections={
+ Village:{start:1,end:15,boss:"Patlu"},
+ City:{start:16,end:30,boss:"Dr. Jhatka"},
+ Mountain:{start:31,end:45,boss:"Ghisatu"},
+ Desert:{start:46,end:60,boss:"Inspector Chingam"},
+ "Snow Valley":{start:61,end:75,boss:"John"}
+};
+const level=Number(localStorage.getItem("currentLevel"))||1;
+const sectionName=localStorage.getItem("selectedSection")||"Village";
+const section=sections[sectionName]||sections.Village;
+const character=localStorage.getItem("selectedCharacter")||"Motu";
+const boss=level===section.end;
+
+document.getElementById("section").textContent=sectionName;
+document.getElementById("level").textContent="LEVEL "+level;
+document.getElementById("playerLabel").textContent=character.toUpperCase();
+
+const player=document.getElementById("player");
+const cars=[document.getElementById("ai1"),document.getElementById("ai2"),document.getElementById("ai3")];
+
+let x=50, started=false, done=false, playerProgress=0, boostTime=0;
+let aiProgress=[12,8,5]; // all start ahead of player
+let aiLane=[43,56,50];
+
+if(boss){
+ cars[0].style.display="block"; cars[1].style.display="none"; cars[2].style.display="none";
+ aiProgress=[10]; aiLane=[50];
+}else{
+ cars.forEach(c=>c.style.display="block");
+}
+
+function move(dir){
+ if(!started||done)return;
+ x+=dir*5;
+ if(x<24)x=24;if(x>76)x=76;
+ player.style.left=x+"%";
+}
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowLeft")move(-1);
+ if(e.key==="ArrowRight")move(1);
+ if(e.code==="Space")boost();
+});
+function boost(){if(started&&!done&&boostTime<=0)boostTime=3}
+
+function animateRoad(dt,fast){
+ document.querySelectorAll(".lane").forEach((el,i)=>{
+  let y=Number(el.dataset.y||([41,56,71,86,101][i]));
+  y+=dt*(fast?60:43);
+  if(y>108)y=36;
+  el.dataset.y=y;el.style.top=y+"%";
+ });
+}
+
+function updateCars(dt){
+ const count=boss?1:3;
+ for(let i=0;i<count;i++){
+   // AI racers continually race forward; their progress can gain/lose slightly.
+   aiProgress[i]+=dt*(7.7 + i*.22 + Math.sin((performance.now()/900)+i)*.32);
+   const gap=aiProgress[i]-playerProgress;
+   // Positive gap = ahead -> higher/smaller on screen.
+   let y=58 - gap*0.75;
+   y=Math.max(24,Math.min(80,y));
+   let scale=0.48 + (80-y)/100;
+   cars[i].style.top=y+"%";
+   cars[i].style.left=aiLane[i]+"%";
+   cars[i].style.transform="translate(-50%,-50%) scale("+scale+")";
+ }
+}
+
+function finish(win){
+ if(done)return; done=true;
+ document.getElementById("finish").style.display="flex";
+ const result=document.getElementById("result"),msg=document.getElementById("message"),next=document.getElementById("next");
+ if(win){
+   result.textContent="🏆 YOU WIN!";
+   if(boss){
+     msg.textContent="🎉 You defeated "+section.boss+"! Next section unlocked.";
+     localStorage.setItem(section.boss+"_unlocked","true");
+     localStorage.setItem(sectionName+"_completed","true");
+     localStorage.setItem("completedBoss",section.boss);
+   }else{
+     msg.textContent="🏁 Level "+level+" completed!";
+     localStorage.setItem("completedLevel",String(level));
+   }
+   let h=Number(localStorage.getItem("highestLevel"))||1;
+   localStorage.setItem("highestLevel",String(Math.max(h,level+1)));
+ }else{
+   result.textContent="❌ YOU LOST!";
+   msg.textContent=boss?"Defeat "+section.boss+" in the one-to-one race.":"Try again and stay ahead!";
+   next.textContent="🔄 RETRY"; next.onclick=()=>location.reload();
+ }
+}
+
+function race(){
+ started=true;
+ let last=performance.now();
+ function frame(now){
+  if(done)return;
+  let dt=Math.min(.05,(now-last)/1000);last=now;
+  if(boostTime>0)boostTime-=dt;
+  const fast=boostTime>0;
+  playerProgress+=dt*(fast?12.8:9.2);
+
+  // small AI speed differences make real overtaking possible
+  for(let i=0;i<aiProgress.length;i++){
+    aiProgress[i]+=dt*(8.7 + i*.12 + Math.sin(now/1200+i)*.55);
+  }
+
+  animateRoad(dt,fast);
+  updateCars(dt);
+
+  const rank=1+aiProgress.filter(v=>v>playerProgress).length;
+  document.getElementById("pos").textContent=rank+" / "+(boss?2:4);
+  document.getElementById("spd").textContent=Math.round(fast?150:105)+" km/h";
+
+  if(playerProgress>=100){finish(true);return}
+  if(Math.max(...aiProgress)>=100){finish(false);return}
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}
+
+let n=3;
+const cd=document.getElementById("countdown");
+const timer=setInterval(()=>{
+ n--;
+ if(n>0)cd.textContent=n;
+ else{
+  cd.textContent="GO!";
+  setTimeout(()=>cd.style.display="none",450);
+  clearInterval(timer);race();
+ }
+},1000);
+
+function nextLevel(){
+ if(boss){
+  const names=["Village","City","Mountain","Desert","Snow Valley"];
+  const i=names.indexOf(sectionName);
+  if(i>=0&&i<names.length-1){
+   const nextSection=names[i+1];
+   localStorage.setItem("selectedSection",nextSection);
+   localStorage.setItem("currentLevel",String(sections[nextSection].start));
+  }
+  location.href="levels.html";
+ }else{
+  localStorage.setItem("currentLevel",String(level+1));
+  location.href="race.html";
+ }
+}
+</script>
+</body>
+</html>
