@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Motu-Patlu Racer - Sections</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: white;
+            text-align: center;
+        }
+
+        header {
+            padding: 25px 15px;
+            background: linear-gradient(135deg, #ff9800, #e65100);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header p {
+            margin-top: 8px;
+            font-size: 18px;
+        }
+
+        .sections-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .section-card {
+            background: #ffffff;
+            color: #222;
+            border-radius: 18px;
+            padding: 25px 15px;
+            min-height: 190px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+            cursor: pointer;
+            transition: 0.25s;
+            border: 4px solid transparent;
+        }
+
+        .section-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .section-icon {
+            font-size: 55px;
+            margin-bottom: 8px;
+        }
+
+        .section-card h2 {
+            margin: 8px 0;
+            font-size: 25px;
+        }
+
+        .section-card p {
+            margin: 7px;
+            font-size: 16px;
+        }
+
+        .boss {
+            font-weight: bold;
+            color: #e65100;
+        }
+
+        .locked {
+            background: #777;
+            color: #ddd;
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .locked:hover {
+            transform: none;
+        }
+
+        .lock-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .back-button {
+            margin: 10px auto 30px;
+            padding: 13px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #ff9800;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #e65100;
+        }
+
+        footer {
+            padding: 20px;
+            margin-top: 20px;
+            background: #111;
+        }
+
+        @media (max-width: 650px) {
+
+            .sections-container {
+                grid-template-columns: 1fr;
+                width: 88%;
+            }
+
+            header h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>🏎️ MOTU-PATLU RACER</h1>
+
+    <p>🌍 Choose Your Section</p>
+
+</header>
+
+
+<div class="sections-container" id="sc"></div>
+<button
+    class="back-button"
+    onclick="goBack()">
+
+    ⬅️ BACK
+
+</button>
+
+
+<footer>
+
+    Motu-Patlu Racer © 2026
+
+</footer>
+
+
+<script src="characters.js"></script>
+<script>
+const hi=parseInt(localStorage.getItem("highestLevel"))||1,S=GAME_CFG.sections,box=document.getElementById("sc");
+S.forEach((x,i)=>{const st=i*15+1,open=hi>=st,c=document.createElement("div");c.className="section-card"+(open?"":" locked");
+ c.innerHTML='<div class="section-icon">'+x.icon+'</div><h2>'+x.name+'</h2><p>Levels '+st+' - '+(st+14)+'</p><p class="boss">🏆 Boss: '+x.boss+'</p><p class="lock-text">'+(open?"✅ UNLOCKED":"🔒 LOCKED")+'</p>';
+ c.onclick=()=>open?openSection(i):alert("🔒 "+x.name+" is locked!\n\nBeat the previous boss first.");box.appendChild(c)});
+function openSection(i){const st=i*15+1,l=Math.max(st,Math.min(st+14,hi));localStorage.setItem("selectedSection",S[i].name);localStorage.setItem("currentLevel",String(l));location.href="race.html"}
+function goBack(){location.href="index.html"}
+</script>
+
+</body>
+
+</html>
