@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#190b22">
+<title>Race Ka Raja: Rocket Buggy Racer</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; width: 100%; height: 100%; overflow: hidden;
+    background: #190b22; font-family: Arial, sans-serif;
+  }
+  #game {
+    position: fixed; inset: 0; display: grid; place-items: center;
+    background: #190b22;
+  }
+  .screen {
+    position: absolute; inset: 0; display: none;
+    align-items: center; justify-content: center;
+  }
+  .screen.active { display: flex; }
+  .screen img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+  }
+  #rotate {
+    display: none; position: fixed; inset: 0; z-index: 10;
+    background: #190b22; color: white; text-align: center;
+    align-items: center; justify-content: center; flex-direction: column;
+    padding: 24px; gap: 14px;
+  }
+  #rotate .phone { font-size: 54px; }
+  #rotate p { font-size: 20px; font-weight: bold; margin: 0; }
+  #rotate button {
+    border: 2px solid #ffbd20; border-radius: 12px; padding: 12px 18px;
+    background: linear-gradient(#ffdb49, #f28b00); color: #2b1200;
+    font-size: 17px; font-weight: bold;
+  }
+  @media (orientation: portrait) {
+    #rotate { display: flex; }
+  }
+</style>
+</head>
+<body>
+<div id="game">
+  <section id="loadingScreen" class="screen active" aria-label="Loading screen">
+    <img src="loading.png" alt="Race Ka Raja loading screen">
+  </section>
+  <section id="homeScreen" class="screen" aria-label="Home screen">
+    <img src="home.png" alt="Race Ka Raja home screen">
+  </section>
+</div>
+<div id="rotate">
+  <div class="phone">📱 ↻</div>
+  <p>फोन आडवा करा</p>
+  <button id="landscapeBtn">गेम सुरू करा</button>
+  <small>Turn your phone sideways to play</small>
+</div>
+<script>
+  const loadingScreen = document.getElementById('loadingScreen');
+  const homeScreen = document.getElementById('homeScreen');
+  let homeShown = false;
+
+  function showHome() {
+    if (homeShown) return;
+    homeShown = true;
+    loadingScreen.classList.remove('active');
+    homeScreen.classList.add('active');
+  }
+
+  // Show the loading design first, then switch to the home design.
+  window.setTimeout(showHome, 3500);
+
+  document.getElementById('landscapeBtn').addEventListener('click', async () => {
+    try {
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      }
+      if (screen.orientation && screen.orientation.lock) {
+        await screen.orientation.lock('landscape');
+      }
+    } catch (e) {
+      // Some mobile browsers do not allow orientation locking; rotate manually.
+    }
+  });
+</script>
+</body>
+</html>
