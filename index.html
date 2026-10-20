@@ -1,420 +1,291 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Race Ka Raja: Rocket Buggy Racer</title>
-
+<title>Race Ka Raja - Rocket Buggy Racer</title>
 <style>
 *{box-sizing:border-box}
-html,body{
- margin:0;width:100%;height:100%;overflow:hidden;
- background:#24101b;color:white;font-family:Arial,sans-serif
-}
-button{cursor:pointer;touch-action:manipulation}
-.screen{
- display:none;position:fixed;inset:0;overflow:hidden;
- background:linear-gradient(135deg,#632c17,#1b0b20)
-}
-.screen.active{display:flex;align-items:center;justify-content:center}
-.art{position:absolute;inset:0;z-index:0}
-.art img{width:100%;height:100%;object-fit:fill;display:block}
-.art img.bad-image{display:none}
-.content{position:relative;z-index:1;text-align:center;width:100%;padding:12px}
-h1,h2,h3{color:#ffd34a;text-shadow:1px 2px 4px #000}
-.action,.choice{
- border:2px solid #ffca28;border-radius:12px;
- padding:10px 15px;margin:5px;
- background:linear-gradient(#ffe45c,#f28b00);
- color:#321400;font-size:clamp(12px,2vw,19px);
- font-weight:bold
-}
-.back{position:absolute;left:10px;top:10px;z-index:3}
-.hotspot{position:absolute;z-index:2;border:0;background:transparent}
-#settings{left:7%;bottom:3%;width:12%;height:25%}
-#help{left:23%;bottom:3%;width:12%;height:25%}
-#news{left:39%;bottom:3%;width:12%;height:25%}
-#signin{left:54%;bottom:3%;width:12%;height:25%}
-#play{left:72%;bottom:3%;width:22%;height:29%}
-#bar{
- position:absolute;left:20%;top:57%;width:60%;height:6%;
- border:3px solid #ffcf35;border-radius:30px;
- background:#38140a;overflow:hidden;z-index:2
-}
-#fill{height:100%;width:0;background:linear-gradient(90deg,#ff8500,#ffe64a)}
-#pct{position:absolute;top:64%;width:100%;text-align:center;
- color:#ffdf4a;font-size:22px;font-weight:bold;z-index:2}
-#modal{
- display:none;position:fixed;inset:0;z-index:20;
- background:#000c;align-items:center;justify-content:center;padding:12px
-}
-#modal.show{display:flex}
-.panel{
- width:min(94vw,600px);max-height:90vh;overflow:auto;
- text-align:center;padding:20px;border:3px solid #ffca28;
- border-radius:18px;background:linear-gradient(#4a1937,#190b20)
-}
-#modalTitle{color:#ffda45}
-#gallery{display:flex;align-items:center;justify-content:center;gap:8px}
-.preview{
- width:min(60vw,390px);height:45vh;object-fit:contain;
- background:#24101b;border-radius:12px
-}
-#itemName,#playerName{color:#ffe05a}
-.small{font-size:14px}
-#track{
- position:relative;width:min(85vw,900px);height:45vh;min-height:150px;
- margin:15px auto;background:linear-gradient(90deg,
- #28783b 0 20%,#444 20% 80%,#28783b 80%);
- border:5px solid #d79a27;overflow:hidden
-}
-#track:after{
- content:"";position:absolute;left:49%;top:0;width:2%;height:200%;
- background:repeating-linear-gradient(to bottom,#fff 0 25px,transparent 25px 50px);
- animation:road 0.5s linear infinite
-}
-.raceCar{position:absolute;z-index:2;font-size:40px}
-#car1{left:27%;bottom:12%}
-#car2{right:27%;bottom:48%}
-@keyframes road{to{transform:translateY(50px)}}
-#rotate{
- display:none;position:fixed;inset:0;z-index:30;
- background:#1b0b20;align-items:center;justify-content:center;
- flex-direction:column;text-align:center;gap:12px
-}
-@media(orientation:portrait){
- #rotate{display:flex}
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111;font-family:Arial,sans-serif;color:white}
+#game{position:relative;width:100%;height:100%;display:grid;place-items:center;background:#111}
+#stage{position:relative;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);aspect-ratio:16/9;overflow:hidden;background:#422c19}
+.screen{position:absolute;inset:0;display:none;overflow:hidden}
+.screen.active{display:block}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(0deg,#0007,transparent 45%,#0002)}
+button{font-weight:900;color:white;cursor:pointer;border:2px solid #ffe27b;border-radius:12px;background:linear-gradient(#ffb523,#e95000);text-shadow:1px 2px 3px #421500;box-shadow:0 3px 0 #702900;padding:1% 2%;font-size:clamp(10px,2vw,23px)}
+button:active{transform:scale(.96)}
+.title{position:absolute;top:4%;left:4%;right:4%;text-align:center;font-size:clamp(20px,5vw,52px);font-weight:1000;color:#ffe43c;text-shadow:3px 4px 2px #431600,-1px -1px white}
+.menu{position:absolute;bottom:5%;left:3%;right:3%;display:flex;justify-content:space-around;align-items:end;gap:1%}
+.menu button{width:19%;min-height:14%;padding:1%;white-space:normal}
+.menu button span{display:block;font-size:clamp(9px,1.5vw,17px);margin-top:4px}
+.back{position:absolute;left:2%;top:3%;z-index:5}
+.center{position:absolute;inset:15% 5% 22%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
+.bigbtn{min-width:25%;padding:1.5%}
+.cardimg{width:45%;height:65%;object-fit:contain;filter:drop-shadow(0 4px 5px #0009)}
+.arrows{display:flex;align-items:center;justify-content:center;gap:8%;width:100%}
+.arrows button{min-width:12%;font-size:clamp(18px,3vw,34px)}
+.caption{font-size:clamp(15px,3vw,30px);font-weight:900;text-shadow:2px 2px 4px black}
+.counter{font-size:clamp(12px,2vw,20px)}
+#loading .loadtitle{position:absolute;top:8%;width:100%;text-align:center;font-size:clamp(25px,7vw,75px);font-weight:1000;color:#ffe62b;text-shadow:4px 4px #591900}
+#loading .subtitle{position:absolute;top:33%;width:100%;text-align:center;font-size:clamp(16px,4vw,43px);font-weight:900;text-shadow:3px 3px #000}
+.loadbox{position:absolute;left:15%;width:70%;bottom:12%;height:7%;border:4px solid #ffe68b;border-radius:30px;background:#321500;padding:3px}
+#loadbar{height:100%;width:0;border-radius:20px;background:repeating-linear-gradient(120deg,#ffed31 0 12px,#ff7900 12px 24px);transition:width .12s}
+#loadpct{position:absolute;bottom:3%;width:100%;text-align:center;font-size:clamp(14px,2.5vw,25px);font-weight:bold;text-shadow:2px 2px black}
+.serieslist{display:grid;grid-template-columns:repeat(5,1fr);gap:1%;width:100%}
+.serieslist button{min-height:60px;padding:5px 1px}
+.locked{filter:grayscale(.5);opacity:.85}
+#notice{position:absolute;z-index:20;top:5%;left:20%;right:20%;padding:10px;background:#222e;border:2px solid orange;border-radius:10px;text-align:center;display:none;font-size:clamp(12px,2vw,20px)}
+#racecar{font-size:clamp(50px,12vw,120px);position:absolute;bottom:15%;left:40%}
+#raceinfo{position:absolute;top:5%;width:100%;text-align:center;font-size:clamp(16px,3vw,30px);font-weight:bold}
+@media (orientation:portrait){#stage{width:100vw;height:56.25vw;flex-shrink:0}#game{overflow:hidden}#rotate{display:block!important}}
+#rotate{display:none;position:fixed;z-index:100;inset:0;background:#111;color:white;text-align:center;padding:25vh 8vw;font-size:22px}
 </style>
 </head>
-
 <body>
+<div id="game">
+<div id="stage">
 
-<!-- LOADING -->
 <section id="loading" class="screen active">
- <div class="art">
-  <img src="https://drive.google.com/uc?export=view&id=1dtYrA_6Ib4wk6_BKCI153LcGIDQJbHlV"
-       alt="Loading screen" onerror="this.classList.add('bad-image')">
- </div>
- <div id="bar"><div id="fill"></div></div>
- <div id="pct">0%</div>
+<img class="bg" data-drive="1dtYrA_6Ib4wk6_BKCI153LcGIDQJbHlV" alt="">
+<div class="shade"></div>
+<div class="loadtitle">Race Ka Raja</div>
+<div class="subtitle">Rocket Buggy Racer</div>
+<div class="loadbox"><div id="loadbar"></div></div>
+<div id="loadpct">Loading... 0%</div>
 </section>
 
-<!-- HOME -->
 <section id="home" class="screen">
- <div class="art">
-  <img src="https://drive.google.com/uc?export=view&id=1GYQjwfzY7wWeMwcMqQtNQwS0bW4h2UUK"
-       alt="Game home" onerror="this.classList.add('bad-image')">
- </div>
- <button class="hotspot" id="settings" aria-label="Settings"></button>
- <button class="hotspot" id="help" aria-label="Help"></button>
- <button class="hotspot" id="news" aria-label="News"></button>
- <button class="hotspot" id="signin" aria-label="Profile"></button>
- <button class="hotspot" id="play" aria-label="Play"></button>
- <div class="content">
-  <h1>RACE KA RAJA</h1>
-  <h3>ROCKET BUGGY RACER</h3>
-  <button class="action" onclick="go('adventure')">PLAY NOW ▶</button>
- </div>
+<img class="bg" data-drive="1GYQjwfzY7wWeMwcMqQtNQwS0bW4h2UUK" alt="">
+<div class="shade"></div>
+<div class="menu">
+<button onclick="popup('Settings')">⚙️<span>Settings</span></button>
+<button onclick="popup('Help')">❔<span>Get Help</span></button>
+<button onclick="popup('News')">📰<span>News</span></button>
+<button onclick="popup('Sign in')">🎮<span>Sign in</span></button>
+<button onclick="go('adventure')">🏁<span>Play</span></button>
+</div>
 </section>
 
-<!-- ADVENTURE -->
 <section id="adventure" class="screen">
- <div class="art">
-  <img src="https://drive.google.com/uc?export=view&id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3"
-       alt="Adventure" onerror="this.classList.add('bad-image')">
- </div>
- <button class="action back" onclick="go('home')">← BACK</button>
- <div class="content">
-  <h1>ADVENTURE</h1>
-  <button class="action" onclick="go('series')">START ADVENTURE ▶</button>
-  <button class="action" onclick="go('powerups')">POWERUPS</button>
- </div>
+<img class="bg" data-drive="1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3" alt="">
+<div class="shade"></div>
+<div class="menu">
+<button onclick="popup('Upgrade')">🔧<span>Upgrade</span></button>
+<button onclick="go('powerups')">❓<span>Powerups</span></button>
+<button onclick="openCar()">🏎️<span>Switch Car</span></button>
+<button onclick="openPlayer()">👨<span>Switch Player</span></button>
+<button onclick="go('series')">🏁<span>Choose Series</span></button>
+</div>
 </section>
 
-<!-- SERIES -->
 <section id="series" class="screen">
- <div class="art">
-  <img src="https://drive.google.com/uc?export=view&id=1SM6OqjlRerfsZFD9LTzKySPgw_JIvOMV"
-       alt="Choose series" onerror="this.classList.add('bad-image')">
- </div>
- <button class="action back" onclick="go('adventure')">← BACK</button>
- <div class="content">
-  <h1>CHOOSE SERIES</h1>
-  <button class="choice" onclick="chooseSeries('Village')">VILLAGE 🔓</button>
-  <button class="choice" onclick="lockedSeries('City')">CITY 🔒</button>
-  <button class="choice" onclick="lockedSeries('Mountain')">MOUNTAIN 🔒</button>
-  <button class="choice" onclick="lockedSeries('Desert')">DESERT 🔒</button>
-  <button class="choice" onclick="lockedSeries('Forest')">FOREST 🔒</button>
- </div>
+<img class="bg" data-drive="1SM6OqjlRerfsZFD9LTzKySPgw_JIvOMV" alt="">
+<div class="shade"></div>
+<button class="back" onclick="go('adventure')">⬅ Back</button>
+<div class="title">CHOOSE SERIES</div>
+<div class="center">
+<div class="serieslist">
+<button onclick="go('race')">🏡<br>Village<br>🔓</button>
+<button class="locked" onclick="popup('City Series Locked')">🏙️<br>City<br>🔒</button>
+<button class="locked" onclick="popup('Mountain Series Locked')">⛰️<br>Mountain<br>🔒</button>
+<button class="locked" onclick="popup('Desert Series Locked')">🏜️<br>Desert<br>🔒</button>
+<button class="locked" onclick="popup('Forest Series Locked')">🌲<br>Forest<br>🔒</button>
+</div>
+<button class="bigbtn" onclick="go('race')">START RACE 🏁</button>
+</div>
 </section>
 
-<!-- CAR SELECTION -->
 <section id="cars" class="screen">
- <button class="action back" onclick="go('series')">← BACK</button>
- <div class="content">
-  <h1>CHOOSE YOUR CAR</h1>
-  <div id="gallery">
-   <button class="action" onclick="changeItem('car',-1)">❮</button>
-   <img id="preview" class="preview" alt="Selected car">
-   <button class="action" onclick="changeItem('car',1)">❯</button>
-  </div>
-  <h2 id="itemName">Raja Rocket</h2>
-  <p id="carCount">Car 1 of 6</p>
-  <button class="action" onclick="go('players')">NEXT: PLAYER →</button>
- </div>
+<img class="bg" data-drive="1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3" alt="">
+<div class="shade"></div>
+<button class="back" onclick="go('adventure')">⬅ Back</button>
+<div class="title">SELECT YOUR CAR</div>
+<div class="center">
+<div class="arrows">
+<button onclick="moveCar(-1)">❮</button>
+<img id="carimg" class="cardimg" alt="Car">
+<button onclick="moveCar(1)">❯</button>
+</div>
+<div id="carname" class="caption">Raja Rocket</div>
+<div id="carcount" class="counter">1 / 6</div>
+<button class="bigbtn" onclick="go('adventure')">SELECT ✓</button>
+</div>
 </section>
 
-<!-- PLAYER SELECTION -->
 <section id="players" class="screen">
- <button class="action back" onclick="go('cars')">← BACK</button>
- <div class="content">
-  <h1>CHOOSE YOUR PLAYER</h1>
-  <div id="gallery">
-   <button class="action" onclick="changeItem('player',-1)">❮</button>
-   <img id="playerPreview" class="preview" alt="Selected player">
-   <button class="action" onclick="changeItem('player',1)">❯</button>
-  </div>
-  <h2 id="playerName">Turbo Golu</h2>
-  <p id="playerAbility">Special ability: Samosa Boost</p>
-  <button class="action" onclick="go('powerups')">NEXT: POWERUPS →</button>
- </div>
+<img class="bg" data-drive="1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3" alt="">
+<div class="shade"></div>
+<button class="back" onclick="go('adventure')">⬅ Back</button>
+<div class="title">SELECT YOUR PLAYER</div>
+<div class="center">
+<div class="arrows">
+<button onclick="movePlayer(-1)">❮</button>
+<img id="playerimg" class="cardimg" alt="Player">
+<button onclick="movePlayer(1)">❯</button>
+</div>
+<div id="playername" class="caption">Turbo Golu</div>
+<div id="playerpower" class="counter">Samosa Boost</div>
+<div id="playercount" class="counter">1 / 6</div>
+<button class="bigbtn" onclick="go('adventure')">SELECT ✓</button>
+</div>
 </section>
 
-<!-- POWERUPS -->
 <section id="powerups" class="screen">
- <div class="art">
-  <img src="https://drive.google.com/uc?export=view&id=1ykC0JKp-ELQS73P2D65ojNPZ2yykjZ4G"
-       alt="Powerups" onerror="this.classList.add('bad-image')">
- </div>
- <button class="action back" onclick="go('players')">← BACK</button>
- <div class="content">
-  <h1>POWERUPS</h1>
-  <p>Select your powerups in the next update!</p>
-  <button class="action" onclick="startRace()">START RACE →</button>
- </div>
+<img class="bg" data-drive="1ykC0JKp-ELQS73P2D65ojNPZ2yykjZ4G" alt="">
+<div class="shade"></div>
+<button class="back" onclick="go('adventure')">⬅ Back</button>
+<div class="title">POWERUPS</div>
+<div class="center">
+<div class="caption">⚡ Nitro Boost</div>
+<div class="caption">🚀 Rocket Attack</div>
+<div class="caption">🛡️ Shield</div>
+<div class="caption">💣 Trap</div>
+<button class="bigbtn" onclick="go('race')">RACE NOW 🏁</button>
+</div>
 </section>
 
-<!-- RACE -->
 <section id="race" class="screen">
- <div class="content">
-  <h1>RACE KA RAJA</h1>
-  <h3 id="session">Village Session</h3>
-  <p id="raceDetails">Raja Rocket • Turbo Golu</p>
-  <div id="track">
-   <span id="car1" class="raceCar">🏎️</span>
-   <span id="car2" class="raceCar">🚙</span>
-  </div>
-  <p>DEMO RACE</p>
-  <button class="action" onclick="go('home')">HOME</button>
-  <button class="action" onclick="go('powerups')">POWERUPS</button>
- </div>
+<img class="bg" data-drive="1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3" alt="">
+<div class="shade"></div>
+<div id="raceinfo">VILLAGE RACE — READY!</div>
+<div id="racecar">🏎️</div>
+<div class="menu">
+<button onclick="raceMove(-1)">⬅<span>LEFT</span></button>
+<button onclick="raceBoost()">⚡<span>BOOST</span></button>
+<button onclick="raceMove(1)">➡<span>RIGHT</span></button>
+<button onclick="go('adventure')">🏠<span>EXIT</span></button>
+</div>
 </section>
 
-<!-- POPUP -->
-<div id="modal">
- <div class="panel">
-  <h2 id="modalTitle"></h2>
-  <p id="modalText"></p>
-  <div id="modalButtons"></div>
- </div>
+<div id="notice"></div>
 </div>
-
-<!-- LANDSCAPE NOTICE -->
-<div id="rotate">
- <div style="font-size:50px">📱 ↻</div>
- <h2>फोन आडवा करा</h2>
- <button class="action" onclick="tryLandscape()">पुन्हा प्रयत्न करा</button>
 </div>
+<div id="rotate">📱 कृपया फोन Landscape (आडवा) करा.</div>
 
 <script>
 "use strict";
 
-const drive = id => "https://drive.google.com/uc?export=view&id=" + id;
+const driveURL = id =>
+  "https://drive.google.com/thumbnail?id=" +
+  encodeURIComponent(id) + "&sz=w1600";
 
-const carList = [
- {name:"Raja Rocket",id:"1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo"},
- {name:"Turbo Thunder",id:"1Op1sQX5TKHjInAneUprthsTOMPQ0uRgm"},
- {name:"Desert King",id:"15Rg7fK-SbRThhZbIeGSsxFdqhSxdCPa1"},
- {name:"Monster Wheels",id:"1P3yhos8L6wuHvd_yTm1uCTjxQEPLUDNP"},
- {name:"Fire Storm",id:"1liLlBqbloOZrOW4et-T7wAPB7jgIi9YJ"},
- {name:"Golden Bullet",id:"1MEe7kZfbz6jFP5hs8SvSPLm_jUGq4-57"}
+const cars = [
+ ["Raja Rocket","1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo"],
+ ["Turbo Thunder","1Op1sQX5TKHjInAneUprthsTOMPQ0uRgm"],
+ ["Desert King","15Rg7fK-SbRThhZbIeGSsxFdqhSxdCPa1"],
+ ["Monster Wheels","1P3yhos8L6wuHvd_yTm1uCTjxQEPLUDNP"],
+ ["Fire Storm","1liLlBqbloOZrOW4et-T7wAPB7jgIi9YJ"],
+ ["Golden Bullet","1MEe7kZfbz6jFP5hs8SvSPLm_jUGq4-57"]
 ];
 
-const playerList = [
- {name:"Turbo Golu",id:"1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4",ability:"Samosa Boost"},
- {name:"Nitro Chotu",id:"19wQXN7ODSc5GrPZm3vWTIY0dRmtNSLZ7",ability:"Bee Attack"},
- {name:"Dr. Bubbly",id:"1aYpPdXUVu9OWMILsfgKJhINUQhZYhz_-",ability:"Acid Trap"},
- {name:"Rinku Rocker",id:"1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW",ability:"DJ Shockwave"},
- {name:"Mukka Max",id:"1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A",ability:"Rocket Storm"},
- {name:"Buslly Baba",id:"1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW",ability:"Missile Boost"}
+const players = [
+ ["Turbo Golu","Samosa Boost","1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4"],
+ ["Nitro Chotu","Bee Attack","19wQXN7ODSc5GrPZm3vWTIY0dRmtNSLZ7"],
+ ["Dr. Bubbly","Acid Trap","1aYpPdXUVu9OWMILsfgKJhINUQhZYhz_-"],
+ ["Rinku Rocker","DJ Shockwave","1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW"],
+ ["Mukka Max","Rocket Storm","1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A"],
+ ["Buslly Baba","Missile Boost","1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW"]
 ];
 
-let carIndex = 0;
-let playerIndex = 0;
-let session = "Village";
-let sound = true;
+let carIndex=0, playerIndex=0, noticeTimer=null;
 
-function go(id) {
- const next = document.getElementById(id);
- if (!next) return;
- document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
- next.classList.add("active");
- if (id === "cars") updateCar();
- if (id === "players") updatePlayer();
+function go(id){
+  const target=document.getElementById(id);
+  if(!target){
+    showNotice("Screen सापडली नाही: "+id);
+    return;
+  }
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  target.classList.add("active");
+  document.getElementById("notice").style.display="none";
 }
 
-function changeItem(type,step) {
- if (type === "car") {
-  carIndex = (carIndex + step + carList.length) % carList.length;
+function showNotice(message){
+  const n=document.getElementById("notice");
+  n.textContent=message;
+  n.style.display="block";
+  clearTimeout(noticeTimer);
+  noticeTimer=setTimeout(()=>n.style.display="none",2500);
+}
+
+function popup(message){
+  showNotice(message);
+}
+
+function openCar(){
   updateCar();
- } else {
-  playerIndex = (playerIndex + step + playerList.length) % playerList.length;
+  go("cars");
+}
+function updateCar(){
+  document.getElementById("carname").textContent=cars[carIndex][0];
+  document.getElementById("carcount").textContent=(carIndex+1)+" / "+cars.length;
+  document.getElementById("carimg").src=driveURL(cars[carIndex][1]);
+}
+function moveCar(step){
+  carIndex=(carIndex+step+cars.length)%cars.length;
+  updateCar();
+}
+
+function openPlayer(){
   updatePlayer();
- }
+  go("players");
+}
+function updatePlayer(){
+  const p=players[playerIndex];
+  document.getElementById("playername").textContent=p[0];
+  document.getElementById("playerpower").textContent=p[1];
+  document.getElementById("playercount").textContent=(playerIndex+1)+" / "+players.length;
+  document.getElementById("playerimg").src=driveURL(p[2]);
+}
+function movePlayer(step){
+  playerIndex=(playerIndex+step+players.length)%players.length;
+  updatePlayer();
 }
 
-function setImage(img,id) {
- img.onerror = () => {
-  img.classList.add("bad-image");
-  img.alt = "Image unavailable - check Google Drive sharing settings";
- };
- img.onload = () => img.classList.remove("bad-image");
- img.src = drive(id);
+let lane=0,boost=0;
+function raceMove(step){
+  lane=Math.max(-2,Math.min(2,lane+step));
+  document.getElementById("racecar").style.left=(40+lane*8)+"%";
+}
+function raceBoost(){
+  boost++;
+  document.getElementById("raceinfo").textContent="BOOST! ⚡ "+boost;
 }
 
-function updateCar() {
- const car = carList[carIndex];
- setImage(document.getElementById("preview"),car.id);
- document.getElementById("itemName").textContent = car.name;
- document.getElementById("carCount").textContent = "Car " + (carIndex+1) + " of " + carList.length;
+function startGame(){
+  // Every screen has a background fallback if Drive images cannot load.
+  document.querySelectorAll("img[data-drive]").forEach(img=>{
+    img.src=driveURL(img.dataset.drive);
+    img.onerror=()=>{img.style.display="none";};
+  });
+
+  updateCar();
+  updatePlayer();
+
+  const bar=document.getElementById("loadbar");
+  const label=document.getElementById("loadpct");
+  let progress=0;
+
+  const loadingInterval=setInterval(()=>{
+    progress=Math.min(100,progress+2);
+    bar.style.width=progress+"%";
+    label.textContent="Loading... "+progress+"%";
+
+    if(progress>=100){
+      clearInterval(loadingInterval);
+      // Loading screen remains visible briefly, then opens Home.
+      setTimeout(()=>go("home"),400);
+    }
+  },50);
 }
 
-function updatePlayer() {
- const player = playerList[playerIndex];
- setImage(document.getElementById("playerPreview"),player.id);
- document.getElementById("playerName").textContent = player.name;
- document.getElementById("playerAbility").textContent = "Special ability: " + player.ability;
-}
+window.addEventListener("error",function(){
+  showNotice("Game error. Page refresh करून पुन्हा प्रयत्न करा.");
+});
 
-function chooseSeries(name) {
- session = name;
- go("cars");
-}
-
-function lockedSeries(name) {
- showModal(name,"This series is locked. Village is available now.",[
-  ["OK",closeModal]
- ]);
-}
-
-function startRace() {
- document.getElementById("session").textContent = session + " Session";
- document.getElementById("raceDetails").textContent =
-  carList[carIndex].name + " • " + playerList[playerIndex].name;
- go("race");
-}
-
-function showModal(title,message,buttons) {
- document.getElementById("modalTitle").textContent = title;
- document.getElementById("modalText").textContent = message;
- const box = document.getElementById("modalButtons");
- box.replaceChildren();
- buttons.forEach(item => {
-  const button = document.createElement("button");
-  button.className = "action";
-  button.textContent = item[0];
-  button.addEventListener("click",item[1]);
-  box.appendChild(button);
- });
- document.getElementById("modal").classList.add("show");
-}
-
-function closeModal() {
- document.getElementById("modal").classList.remove("show");
-}
-
-document.getElementById("settings").onclick = () => {
- showModal("SETTINGS","Sound: " + (sound ? "ON" : "OFF"),[
-  ["Sound ON / OFF",() => {
-   sound = !sound;
-   showModal("SETTINGS","Sound: " + (sound ? "ON" : "OFF"),[
-    ["BACK",closeModal]
-   ]);
-  }],
-  ["BACK",closeModal]
- ]);
-};
-
-document.getElementById("help").onclick = () =>
- showModal("HELP","Tap Play, choose Adventure, select Village, then choose your car and player.",[
-  ["OK",closeModal]
- ]);
-
-document.getElementById("news").onclick = () =>
- showModal("NEWS","Welcome to Race Ka Raja: Rocket Buggy Racer!",[
-  ["OK",closeModal]
- ]);
-
-document.getElementById("signin").onclick = () => {
- document.getElementById("modalTitle").textContent = "RACER PROFILE";
- document.getElementById("modalText").innerHTML =
-  '<input id="racerName" maxlength="20" placeholder="Your name">';
- const box = document.getElementById("modalButtons");
- box.replaceChildren();
- const save = document.createElement("button");
- save.className = "action";
- save.textContent = "SAVE";
- save.onclick = () => {
-  const input = document.getElementById("racerName");
-  const name = (input.value || "Racer").replace(/[&<>]/g,"");
-  showModal("WELCOME","Welcome, " + name + "!",[["OK",closeModal]]);
- };
- const back = document.createElement("button");
- back.className = "action";
- back.textContent = "BACK";
- back.onclick = closeModal;
- box.append(save,back);
- document.getElementById("modal").classList.add("show");
-};
-
-document.getElementById("play").onclick = () => go("adventure");
-
-function loadingStep() {
- const fill = document.getElementById("fill");
- const pct = document.getElementById("pct");
- let progress = 0;
-
- const timer = setInterval(() => {
-  progress = Math.min(100,progress + 2);
-  fill.style.width = progress + "%";
-  pct.textContent = progress + "%";
-
-  if (progress >= 100) {
-   clearInterval(timer);
-   go("home");
-  }
- },55);
-}
-
-async function tryLandscape() {
- try {
-  if (document.documentElement.requestFullscreen) {
-   await document.documentElement.requestFullscreen();
-  }
-  if (screen.orientation && screen.orientation.lock) {
-   await screen.orientation.lock("landscape");
-  }
- } catch (error) {
-  console.log("Rotate your phone manually.");
- }
-}
-
-updateCar();
-updatePlayer();
-loadingStep();
+window.addEventListener("DOMContentLoaded",startGame);
 </script>
-
 </body>
 </html>
