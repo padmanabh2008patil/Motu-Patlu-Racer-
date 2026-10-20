@@ -3,188 +3,82 @@
 <html lang="mr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#100b08">
 <title>Race Ka Raja: Rocket Buggy Racer</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+html,body{
+ margin:0;padding:0;width:100%;height:100%;
+ overflow:hidden;background:#100b08;
+ font-family:Arial,sans-serif;
 }
-
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #100b08;
-  font-family: Arial, sans-serif;
+#game{
+ position:fixed;inset:0;
+ width:100vw;height:100vh;height:100dvh;
+ overflow:hidden;background:#24150c;
 }
-
-#game {
-  position: absolute;
-  width: min(100vw, 177.7778vh);
-  height: min(100vh, 56.25vw);
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  overflow: hidden;
-  background: #24150c;
+.screen{position:absolute;inset:0;display:none;overflow:hidden}
+.screen.active{display:block}
+.bg{
+ position:absolute;inset:0;width:100%;height:100%;
+ object-fit:fill;
 }
-
-.screen {
-  position: absolute;
-  inset: 0;
-  display: none;
+.hit{
+ position:absolute;border:0;background:transparent;
+ padding:0;touch-action:manipulation;
 }
-
-.screen.active {
-  display: block;
+#progressTrack{
+ position:absolute;left:20.7%;top:78.2%;
+ width:58.5%;height:5.8%;
+ border-radius:999px;overflow:hidden;
+ background:#351000;border:3px solid #ffbd25;
 }
-
-.bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
+#progress{
+ height:100%;width:0%;
+ background:repeating-linear-gradient(
+  45deg,#ff5b00 0 10px,#ff9a00 10px 20px
+ );
 }
-
-.hit {
-  position: absolute;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  touch-action: manipulation;
+#loadPercent{
+ position:absolute;top:86%;width:100%;
+ text-align:center;color:white;font-weight:bold;
+ font-size:clamp(12px,2vw,24px);
+ text-shadow:2px 3px 3px black;
 }
-
-#progressTrack {
-  position: absolute;
-  left: 20.7%;
-  top: 78.2%;
-  width: 58.5%;
-  height: 5.8%;
-  border-radius: 999px;
-  overflow: hidden;
-  background: #351000;
-  border: 4px solid #ffbd25;
+.backBtn{
+ position:absolute;z-index:5;left:1.5%;top:2%;
+ width:10%;height:13%;min-width:55px;
+ border:3px solid #ffca36;border-radius:15px;
+ background:linear-gradient(#ffb52a,#f15a00);
+ color:white;font-weight:bold;
 }
-
-#progress {
-  height: 100%;
-  width: 0%;
-  background: repeating-linear-gradient(
-    45deg,
-    #ff5b00 0 10px,
-    #ff9a00 10px 20px
-  );
+#playerLabel{
+ position:absolute;left:50%;top:3%;
+ transform:translateX(-50%);
+ padding:8px 16px;border:2px solid #ffca36;
+ border-radius:12px;background:#351000dd;
+ color:#ffcf27;font-weight:bold;
+ font-size:clamp(14px,2.5vw,30px);
+ white-space:nowrap;
 }
-
-#loadPercent {
-  position: absolute;
-  top: 86%;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-weight: bold;
-  font-size: 2vw;
-  text-shadow: 2px 3px 3px black;
-  pointer-events: none;
+#notice{
+ position:absolute;z-index:10;left:50%;bottom:2%;
+ transform:translateX(-50%);max-width:90%;
+ padding:8px 14px;border:2px solid #ffc22c;
+ border-radius:10px;background:#190700f2;
+ color:white;font-size:clamp(12px,1.3vw,18px);
+ text-align:center;display:none;
 }
-
-.overlayPanel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(12, 5, 0, 0.45);
-  padding: 3%;
+#rotateMessage{
+ display:none;position:absolute;inset:0;z-index:100;
+ background:#180900;color:white;
+ align-items:center;justify-content:center;
+ text-align:center;padding:10%;font-size:22px;
 }
-
-.panel {
-  width: 75%;
-  max-height: 86%;
-  overflow: auto;
-  border: 5px solid #ff8b00;
-  border-radius: 22px;
-  background: linear-gradient(#6b2608, #2c1006);
-  color: white;
-  text-align: center;
-  padding: 2%;
-}
-
-.panel h1 {
-  margin: 0 0 2%;
-  font-size: 3vw;
-  color: #ffcf27;
-  text-shadow: 3px 4px 2px #260900;
-}
-
-.choiceRow {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 3%;
-}
-
-.choice {
-  padding: 12px 18px;
-  border: 3px solid #ffc22c;
-  border-radius: 12px;
-  background: linear-gradient(#ffb52a, #f05b00);
-  color: white;
-  font-size: 1.4vw;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#itemName {
-  font-size: 2.8vw;
-  color: #ffcf27;
-  text-shadow: 2px 3px #2a0900;
-}
-
-.backBtn {
-  position: absolute;
-  left: 1.2%;
-  top: 2%;
-  width: 9%;
-  height: 13%;
-  border: 3px solid #ffca36;
-  border-radius: 30px;
-  background: linear-gradient(#ffb52a, #f15a00);
-  color: white;
-  font-weight: bold;
-  font-size: 1.5vw;
-  cursor: pointer;
-  z-index: 4;
-}
-
-#notice {
-  position: absolute;
-  left: 50%;
-  bottom: 2%;
-  transform: translateX(-50%);
-  max-width: 90%;
-  padding: 10px 18px;
-  border: 2px solid #ffc22c;
-  border-radius: 12px;
-  background: rgba(25, 7, 0, 0.95);
-  color: white;
-  font-size: 1.2vw;
-  font-weight: bold;
-  text-align: center;
-  display: none;
-  z-index: 10;
-}
-
-@media (orientation: portrait) {
-  #game {
-    width: 100vw;
-    height: 56.25vw;
-  }
+@media (orientation:portrait){
+ #rotateMessage{display:flex}
 }
 </style>
 </head>
@@ -192,331 +86,207 @@ html, body {
 <body>
 <div id="game">
 
-  <!-- 1. LOADING SCREEN -->
-  <section id="loading" class="screen active">
-    <img class="bg"
-      src="https://drive.google.com/thumbnail?id=1dtYrA_6Ib4wk6_BKCI153LcGIDQJbHlV&sz=w1600"
-      alt="Loading Screen">
+<div id="rotateMessage">
+ कृपया मोबाईल आडवा (Landscape) फिरवा.
+</div>
 
-    <div id="progressTrack">
-      <div id="progress"></div>
-    </div>
+<!-- 1. LOADING SCREEN -->
+<section id="loading" class="screen active">
+ <img class="bg"
+ src="https://drive.google.com/thumbnail?id=1dtYrA_6Ib4wk6_BKCI153LcGIDQJbHlV&sz=w1600"
+ alt="Loading Screen">
+ <div id="progressTrack"><div id="progress"></div></div>
+ <div id="loadPercent">Loading 0%</div>
+</section>
 
-    <div id="loadPercent">Loading 0%</div>
-  </section>
+<!-- 2. HOME SCREEN: NEWS, SIGN IN, PLAY -->
+<section id="home" class="screen">
+ <img class="bg"
+ src="https://drive.google.com/thumbnail?id=1GYQjwfzY7wWeMwcMqQtNQwS0bW4h2UUK&sz=w1600"
+ alt="Home Screen">
 
-  <!-- 2. HOME SCREEN -->
-  <section id="home" class="screen">
-    <img class="bg"
-      src="https://drive.google.com/thumbnail?id=1GYQjwfzY7wWeMwcMqQtNQwS0bW4h2UUK&sz=w1600"
-      alt="Home Screen">
+ <button class="hit" aria-label="Play"
+ style="left:72%;top:62%;width:25%;height:34%"
+ onclick="go('adventure')"></button>
+</section>
 
-    <button class="hit"
-      aria-label="Play"
-      style="left:75%;top:65%;width:20%;height:27%;"
-      onclick="go('adventure')">
-    </button>
-  </section>
+<!-- 3. ADVENTURE SCREEN -->
+<section id="adventure" class="screen">
+ <img class="bg"
+ src="https://drive.google.com/thumbnail?id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3&sz=w1600"
+ alt="Adventure Screen">
 
-  <!-- 3. ADVENTURE SCREEN -->
-  <section id="adventure" class="screen">
-    <img class="bg"
-      src="https://drive.google.com/thumbnail?id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3&sz=w1600"
-      alt="Adventure Screen">
+ <button class="hit" aria-label="Back"
+ style="left:0;top:0;width:10%;height:18%"
+ onclick="go('home')"></button>
 
-    <button class="hit"
-      aria-label="Back"
-      style="left:0;top:0;width:8%;height:18%;"
-      onclick="go('home')">
-    </button>
+ <button class="hit" aria-label="Adventure"
+ style="left:35%;top:60%;width:30%;height:36%"
+ onclick="go('garage')"></button>
+</section>
 
-    <button class="hit"
-      aria-label="Adventure"
-      style="left:39%;top:68%;width:23%;height:27%;"
-      onclick="go('garage')">
-    </button>
-  </section>
+<!-- 4. SWITCH PLAYER / SWITCH CAR / POWERUPS MENU -->
+<section id="garage" class="screen">
+ <img class="bg"
+ src="https://drive.google.com/thumbnail?id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3&sz=w1600"
+ alt="Game Menu">
 
-  <!-- 4. GAME MENU -->
-  <section id="garage" class="screen">
-    <img class="bg"
-      src="https://drive.google.com/thumbnail?id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3&sz=w1600"
-      alt="Game Menu">
+ <button class="hit" aria-label="Powerups"
+ style="left:17%;top:69%;width:16%;height:29%"
+ onclick="go('powerups')"></button>
 
-    <button class="hit"
-      aria-label="Upgrade"
-      style="left:0;top:72%;width:15%;height:25%;"
-      onclick="showNotice('Upgrade स्क्रीन नंतर जोडू.')">
-    </button>
+ <button class="hit" aria-label="Switch Car"
+ style="left:34%;top:69%;width:15%;height:29%"
+ onclick="showNotice('Switch Car स्क्रीन पुढे जोडू.')"></button>
 
-    <button class="hit"
-      aria-label="Powerups"
-      style="left:18%;top:72%;width:14%;height:25%;"
-      onclick="go('powerups')">
-    </button>
+ <button class="hit" aria-label="Switch Player"
+ style="left:50%;top:69%;width:16%;height:29%"
+ onclick="go('playerScreen')"></button>
+</section>
 
-    <button class="hit"
-      aria-label="Switch Car"
-      style="left:33%;top:72%;width:14%;height:25%;"
-      onclick="go('carScreen')">
-    </button>
+<!-- POWERUPS SCREEN -->
+<section id="powerups" class="screen">
+ <img class="bg"
+ src="https://drive.google.com/thumbnail?id=1ykC0JKp-ELQS73P2D65ojNPZ2yykjZ4G&sz=w1600"
+ alt="Powerups Screen">
 
-    <button class="hit"
-      aria-label="Switch Player"
-      style="left:49%;top:72%;width:15%;height:25%;"
-      onclick="go('playerScreen')">
-    </button>
+ <button class="hit" aria-label="Back"
+ style="left:0;top:0;width:11%;height:20%"
+ onclick="go('garage')"></button>
+</section>
 
-    <button class="hit"
-      aria-label="Choose Series"
-      style="left:75%;top:72%;width:24%;height:25%;"
-      onclick="go('seriesScreen')">
-    </button>
-  </section>
+<!-- 5. PLAYER 1 TO PLAYER 6 -->
+<section id="playerScreen" class="screen">
+ <img id="playerBg" class="bg"
+ src="https://drive.google.com/thumbnail?id=1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4&sz=w1600"
+ alt="Turbo Golu">
 
-  <!-- 5. POWERUPS -->
-  <section id="powerups" class="screen">
-    <img class="bg"
-      src="https://drive.google.com/thumbnail?id=1ykC0JKp-ELQS73P2D65ojNPZ2yykjZ4G&sz=w1600"
-      alt="Powerups Screen">
+ <button class="backBtn"
+ onclick="go('garage')">BACK</button>
 
-    <button class="hit"
-      aria-label="Back"
-      style="left:0;top:0;width:9%;height:20%;"
-      onclick="go('garage')">
-    </button>
-  </section>
+ <div id="playerLabel">Player 1 — Turbo Golu</div>
 
-  <!-- 6. PLAYER SELECTION -->
-  <section id="playerScreen" class="screen">
-    <img id="playerBg" class="bg"
-      src="https://drive.google.com/thumbnail?id=1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4&sz=w1600"
-      alt="Turbo Golu">
+ <button class="hit" aria-label="Previous Player"
+ style="left:0;top:35%;width:15%;height:40%"
+ onclick="changePlayer(-1)"></button>
 
-    <button class="backBtn"
-      onclick="go('garage')">BACK</button>
+ <button class="hit" aria-label="Next Player"
+ style="right:0;top:35%;width:15%;height:40%"
+ onclick="changePlayer(1)"></button>
 
-    <button class="hit"
-      aria-label="Previous Player"
-      style="left:35%;top:80%;width:9%;height:18%;"
-      onclick="changePlayer(-1)">
-    </button>
+ <button class="hit" aria-label="Select Player"
+ style="left:40%;bottom:0;width:20%;height:18%"
+ onclick="selectPlayer()"></button>
+</section>
 
-    <button class="hit"
-      aria-label="Select Player"
-      style="left:45%;top:80%;width:30%;height:18%;"
-      onclick="selectPlayer()">
-    </button>
-
-    <button class="hit"
-      aria-label="Next Player"
-      style="left:75%;top:80%;width:10%;height:18%;"
-      onclick="changePlayer(1)">
-    </button>
-  </section>
-
-  <!-- 7. CAR SELECTION -->
-  <section id="carScreen" class="screen">
-    <img id="carBg" class="bg"
-      src="https://drive.google.com/thumbnail?id=1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo&sz=w1600"
-      alt="Raja Rocket">
-
-    <button class="backBtn"
-      onclick="go('garage')">BACK</button>
-
-    <div class="overlayPanel">
-      <div class="panel">
-        <h1>SWITCH CAR</h1>
-
-        <div id="itemName">Raja Rocket</div>
-
-        <div class="choiceRow">
-          <button class="choice"
-            onclick="changeCar(-1)">❮ मागे</button>
-
-          <button class="choice"
-            onclick="selectCar()">SELECT</button>
-
-          <button class="choice"
-            onclick="changeCar(1)">पुढे ❯</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. CHOOSE SERIES -->
-  <section id="seriesScreen" class="screen">
-    <img class="bg"
-      src="https://drive.google.com/thumbnail?id=1SM6OqjlRerfsZFD9LTzKySPgw_JIvOMV&sz=w1600"
-      alt="Choose Series">
-
-    <button class="hit"
-      aria-label="Back"
-      style="left:1%;top:2%;width:8%;height:14%;"
-      onclick="go('garage')">
-    </button>
-  </section>
-
-  <div id="notice" role="status"></div>
+<div id="notice" role="status"></div>
 </div>
 
 <script>
-/* SCREEN NAVIGATION */
 const screens = document.querySelectorAll('.screen');
 
-function go(id) {
-  screens.forEach(screen => {
-    screen.classList.toggle('active', screen.id === id);
-  });
-
-  hideNotice();
+function go(id){
+ screens.forEach(s => {
+  s.classList.toggle('active', s.id === id);
+ });
+ hideNotice();
 }
 
-/* LOADING BAR: 0 TO 100 */
+/* LOADING 0% TO 100% */
 let progress = 0;
-
 const progressEl = document.getElementById('progress');
 const percentEl = document.getElementById('loadPercent');
 
-const loader = setInterval(function() {
-  progress = Math.min(100, progress + 1);
+const loader = setInterval(() => {
+ progress = Math.min(100, progress + 1);
+ progressEl.style.width = progress + '%';
+ percentEl.textContent = 'Loading ' + progress + '%';
 
-  progressEl.style.width = progress + '%';
-  percentEl.textContent = 'Loading ' + progress + '%';
-
-  if (progress >= 100) {
-    clearInterval(loader);
-
-    setTimeout(function() {
-      go('home');
-    }, 350);
-  }
+ if(progress >= 100){
+  clearInterval(loader);
+  setTimeout(() => go('home'), 400);
+ }
 }, 35);
 
-/* PLAYER IMAGES */
+/* SIX PLAYER SCREENS */
 const players = [
-  {
-    file: 'https://drive.google.com/thumbnail?id=1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4&sz=w1600',
-    name: 'Turbo Golu',
-    locked: false
-  },
-  {
-    file: 'https://drive.google.com/thumbnail?id=19wQXN7ODSc5GrPZm3vWTIY0dRmtNSLZ7&sz=w1600',
-    name: 'Nitro Chotu',
-    locked: true
-  },
-  {
-    file: 'https://drive.google.com/thumbnail?id=1aYpPdXUVu9OWMILsfgKJhINUQhZYhz_-&sz=w1600',
-    name: 'Dr. Bubbly',
-    locked: true
-  },
-  {
-    file: 'https://drive.google.com/thumbnail?id=1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW&sz=w1600',
-    name: 'Rinku Rocker',
-    locked: true
-  },
-  {
-    file: 'https://drive.google.com/thumbnail?id=1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A&sz=w1600',
-    name: 'Mukka Max',
-    locked: true
-  }
+ {
+  name:'Turbo Golu',
+  file:'https://drive.google.com/thumbnail?id=1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4&sz=w1600',
+  locked:false
+ },
+ {
+  name:'Nitro Chotu',
+  file:'https://drive.google.com/thumbnail?id=19wQXN7ODSc5GrPZm3vWTIY0dRmtNSLZ7&sz=w1600',
+  locked:true
+ },
+ {
+  name:'Dr. Bubbly',
+  file:'https://drive.google.com/thumbnail?id=1aYpPdXUVu9OWMILsfgKJhINUQhZYhz_-&sz=w1600',
+  locked:true
+ },
+ {
+  name:'Rinku Rocker',
+  file:'https://drive.google.com/thumbnail?id=1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW&sz=w1600',
+  locked:true
+ },
+ {
+  name:'Mukka Max',
+  file:'https://drive.google.com/thumbnail?id=1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A&sz=w1600',
+  locked:true
+ },
+ {
+  name:'Player 6',
+  file:'https://drive.google.com/thumbnail?id=1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A&sz=w1600',
+  locked:true
+ }
 ];
 
 let playerIndex = 0;
 
-function changePlayer(direction) {
-  playerIndex =
-    (playerIndex + direction + players.length) % players.length;
+function changePlayer(direction){
+ playerIndex =
+  (playerIndex + direction + players.length) % players.length;
 
-  const player = players[playerIndex];
+ const p = players[playerIndex];
 
-  document.getElementById('playerBg').src = player.file;
-  document.getElementById('playerBg').alt = player.name;
+ const img = document.getElementById('playerBg');
+ img.src = p.file;
+ img.alt = p.name;
 
-  showNotice(
-    player.name + (player.locked ? ' — LOCKED' : '')
-  );
+ document.getElementById('playerLabel').textContent =
+  'Player ' + (playerIndex + 1) + ' — ' + p.name;
+
+ showNotice(p.name + (p.locked ? ' — LOCKED' : ''));
 }
 
-function selectPlayer() {
-  const player = players[playerIndex];
+function selectPlayer(){
+ const p = players[playerIndex];
 
-  if (player.locked) {
-    showNotice(player.name + ' सध्या LOCKED आहे.');
-  } else {
-    showNotice(player.name + ' निवडला!');
-
-    setTimeout(function() {
-      go('garage');
-    }, 700);
-  }
+ if(p.locked){
+  showNotice(p.name + ' सध्या LOCKED आहे.');
+ } else {
+  showNotice(p.name + ' निवडला!');
+  setTimeout(() => go('garage'), 700);
+ }
 }
 
-/* CAR IMAGES */
-const cars = [
-  {
-    name: 'Raja Rocket',
-    file: 'https://drive.google.com/thumbnail?id=1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo&sz=w1600'
-  },
-  {
-    name: 'Turbo Thunder',
-    file: 'https://drive.google.com/thumbnail?id=1Op1sQX5TKHjInAneUprthsTOMPQ0uRgm&sz=w1600'
-  },
-  {
-    name: 'Desert King',
-    file: 'https://drive.google.com/thumbnail?id=15Rg7fK-SbRThhZbIeGSsxFdqhSxdCPa1&sz=w1600'
-  },
-  {
-    name: 'Monster Wheels',
-    file: 'https://drive.google.com/thumbnail?id=1P3yhos8L6wuHvd_yTm1uCTjxQEPLUDNP&sz=w1600'
-  },
-  {
-    name: 'Fire Storm',
-    file: 'https://drive.google.com/thumbnail?id=1liLlBqbloOZrOW4et-T7wAPB7jgIi9YJ&sz=w1600'
-  },
-  {
-    name: 'Golden Bullet',
-    file: 'https://drive.google.com/thumbnail?id=1MEe7kZfbz6jFP5hs8SvSPLm_jUGq4-57&sz=w1600'
-  }
-];
-
-let carIndex = 0;
-
-function changeCar(direction) {
-  carIndex =
-    (carIndex + direction + cars.length) % cars.length;
-
-  document.getElementById('carBg').src = cars[carIndex].file;
-  document.getElementById('carBg').alt = cars[carIndex].name;
-  document.getElementById('itemName').textContent = cars[carIndex].name;
-}
-
-function selectCar() {
-  showNotice(cars[carIndex].name + ' निवडली!');
-
-  setTimeout(function() {
-    go('garage');
-  }, 700);
-}
-
-/* NOTIFICATION */
+/* NOTICE */
 let noticeTimer;
 
-function showNotice(message) {
-  const notice = document.getElementById('notice');
+function showNotice(message){
+ const n = document.getElementById('notice');
+ n.textContent = message;
+ n.style.display = 'block';
 
-  notice.textContent = message;
-  notice.style.display = 'block';
-
-  clearTimeout(noticeTimer);
-
-  noticeTimer = setTimeout(function() {
-    notice.style.display = 'none';
-  }, 2200);
+ clearTimeout(noticeTimer);
+ noticeTimer = setTimeout(() => {
+  n.style.display = 'none';
+ }, 2200);
 }
 
-function hideNotice() {
-  document.getElementById('notice').style.display = 'none';
+function hideNotice(){
+ document.getElementById('notice').style.display = 'none';
 }
 </script>
 </body>
