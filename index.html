@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -97,7 +98,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(12, 5, 0, 0.65);
+  background: rgba(12, 5, 0, 0.45);
   padding: 3%;
 }
 
@@ -120,11 +121,6 @@ html, body {
   text-shadow: 3px 4px 2px #260900;
 }
 
-.panel p {
-  font-size: 1.5vw;
-  font-weight: bold;
-}
-
 .choiceRow {
   display: flex;
   gap: 10px;
@@ -141,29 +137,29 @@ html, body {
   color: white;
   font-size: 1.4vw;
   font-weight: bold;
-  text-shadow: 2px 2px #4d1700;
   cursor: pointer;
 }
 
-#carName {
+#itemName {
   font-size: 2.8vw;
   color: #ffcf27;
   text-shadow: 2px 3px #2a0900;
 }
 
-#carBack {
+.backBtn {
   position: absolute;
   left: 1.2%;
   top: 2%;
-  width: 8%;
-  height: 14%;
+  width: 9%;
+  height: 13%;
   border: 3px solid #ffca36;
-  border-radius: 50%;
+  border-radius: 30px;
   background: linear-gradient(#ffb52a, #f15a00);
   color: white;
   font-weight: bold;
   font-size: 1.5vw;
   cursor: pointer;
+  z-index: 4;
 }
 
 #notice {
@@ -181,6 +177,7 @@ html, body {
   font-weight: bold;
   text-align: center;
   display: none;
+  z-index: 10;
 }
 
 @media (orientation: portrait) {
@@ -197,8 +194,9 @@ html, body {
 
   <!-- 1. LOADING SCREEN -->
   <section id="loading" class="screen active">
-    <img class="bg" src="assets/loading.png"
-         alt="Race Ka Raja Loading Screen">
+    <img class="bg"
+      src="https://drive.google.com/thumbnail?id=1dtYrA_6Ib4wk6_BKCI153LcGIDQJbHlV&sz=w1600"
+      alt="Loading Screen">
 
     <div id="progressTrack">
       <div id="progress"></div>
@@ -209,7 +207,9 @@ html, body {
 
   <!-- 2. HOME SCREEN -->
   <section id="home" class="screen">
-    <img class="bg" src="assets/home.png" alt="Home Screen">
+    <img class="bg"
+      src="https://drive.google.com/thumbnail?id=1GYQjwfzY7wWeMwcMqQtNQwS0bW4h2UUK&sz=w1600"
+      alt="Home Screen">
 
     <button class="hit"
       aria-label="Play"
@@ -220,8 +220,9 @@ html, body {
 
   <!-- 3. ADVENTURE SCREEN -->
   <section id="adventure" class="screen">
-    <img class="bg" src="assets/adventure.png"
-         alt="Adventure Screen">
+    <img class="bg"
+      src="https://drive.google.com/thumbnail?id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3&sz=w1600"
+      alt="Adventure Screen">
 
     <button class="hit"
       aria-label="Back"
@@ -236,10 +237,11 @@ html, body {
     </button>
   </section>
 
-  <!-- 4. MAIN GAME MENU -->
+  <!-- 4. GAME MENU -->
   <section id="garage" class="screen">
-    <img class="bg" src="assets/garage.png"
-         alt="Main Game Menu">
+    <img class="bg"
+      src="https://drive.google.com/thumbnail?id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3&sz=w1600"
+      alt="Game Menu">
 
     <button class="hit"
       aria-label="Upgrade"
@@ -272,10 +274,11 @@ html, body {
     </button>
   </section>
 
-  <!-- 5. POWERUPS SCREEN -->
+  <!-- 5. POWERUPS -->
   <section id="powerups" class="screen">
-    <img class="bg" src="assets/powerups.png"
-         alt="Powerups Screen">
+    <img class="bg"
+      src="https://drive.google.com/thumbnail?id=1ykC0JKp-ELQS73P2D65ojNPZ2yykjZ4G&sz=w1600"
+      alt="Powerups Screen">
 
     <button class="hit"
       aria-label="Back"
@@ -286,16 +289,12 @@ html, body {
 
   <!-- 6. PLAYER SELECTION -->
   <section id="playerScreen" class="screen">
-    <img id="playerBg"
-         class="bg"
-         src="assets/player_1.png"
-         alt="Player Selection">
+    <img id="playerBg" class="bg"
+      src="https://drive.google.com/thumbnail?id=1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4&sz=w1600"
+      alt="Turbo Golu">
 
-    <button class="hit"
-      aria-label="Back"
-      style="left:0;top:0;width:8%;height:15%;"
-      onclick="go('garage')">
-    </button>
+    <button class="backBtn"
+      onclick="go('garage')">BACK</button>
 
     <button class="hit"
       aria-label="Previous Player"
@@ -316,20 +315,20 @@ html, body {
     </button>
   </section>
 
-  <!-- 7. TEMPORARY SWITCH CAR SCREEN -->
+  <!-- 7. CAR SELECTION -->
   <section id="carScreen" class="screen">
-    <img class="bg" src="assets/garage.png"
-         alt="Temporary Car Selection">
+    <img id="carBg" class="bg"
+      src="https://drive.google.com/thumbnail?id=1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo&sz=w1600"
+      alt="Raja Rocket">
+
+    <button class="backBtn"
+      onclick="go('garage')">BACK</button>
 
     <div class="overlayPanel">
       <div class="panel">
         <h1>SWITCH CAR</h1>
 
-        <p>
-          Switch Car चे मूळ 6 फोटो नंतर जोडू.
-        </p>
-
-        <div id="carName">Raja Rocket</div>
+        <div id="itemName">Raja Rocket</div>
 
         <div class="choiceRow">
           <button class="choice"
@@ -343,58 +342,18 @@ html, body {
         </div>
       </div>
     </div>
-
-    <button id="carBack"
-      onclick="go('garage')">BACK</button>
   </section>
 
-  <!-- 8. TEMPORARY CHOOSE SERIES SCREEN -->
+  <!-- 8. CHOOSE SERIES -->
   <section id="seriesScreen" class="screen">
-    <img class="bg" src="assets/adventure.png"
-         alt="Temporary Series Selection">
+    <img class="bg"
+      src="https://drive.google.com/thumbnail?id=1SM6OqjlRerfsZFD9LTzKySPgw_JIvOMV&sz=w1600"
+      alt="Choose Series">
 
-    <div class="overlayPanel">
-      <div class="panel">
-        <h1>CHOOSE SERIES</h1>
-
-        <p>
-          मूळ Choose Series फोटो नंतर जोडू.
-        </p>
-
-        <div class="choiceRow">
-          <button class="choice"
-            onclick="chooseSeries('Village')">
-            Village<br>SELECT
-          </button>
-
-          <button class="choice"
-            onclick="chooseSeries('City')">
-            City<br>LOCKED
-          </button>
-
-          <button class="choice"
-            onclick="chooseSeries('Mountain')">
-            Mountain<br>LOCKED
-          </button>
-
-          <button class="choice"
-            onclick="chooseSeries('Desert')">
-            Desert<br>LOCKED
-          </button>
-
-          <button class="choice"
-            onclick="chooseSeries('Forest')">
-            Forest<br>LOCKED
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <button id="seriesBack"
-      class="hit"
+    <button class="hit"
+      aria-label="Back"
       style="left:1%;top:2%;width:8%;height:14%;"
       onclick="go('garage')">
-      <span style="color:white;font-weight:bold;">BACK</span>
     </button>
   </section>
 
@@ -413,7 +372,7 @@ function go(id) {
   hideNotice();
 }
 
-/* LOADING BAR: 0% TO 100% */
+/* LOADING BAR: 0 TO 100 */
 let progress = 0;
 
 const progressEl = document.getElementById('progress');
@@ -434,30 +393,30 @@ const loader = setInterval(function() {
   }
 }, 35);
 
-/* PLAYER SELECTION */
+/* PLAYER IMAGES */
 const players = [
   {
-    file: 'assets/player_1.png',
+    file: 'https://drive.google.com/thumbnail?id=1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4&sz=w1600',
     name: 'Turbo Golu',
     locked: false
   },
   {
-    file: 'assets/player_2.png',
+    file: 'https://drive.google.com/thumbnail?id=19wQXN7ODSc5GrPZm3vWTIY0dRmtNSLZ7&sz=w1600',
     name: 'Nitro Chotu',
     locked: true
   },
   {
-    file: 'assets/player_3.png',
+    file: 'https://drive.google.com/thumbnail?id=1aYpPdXUVu9OWMILsfgKJhINUQhZYhz_-&sz=w1600',
     name: 'Dr. Bubbly',
     locked: true
   },
   {
-    file: 'assets/player_4.png',
+    file: 'https://drive.google.com/thumbnail?id=1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW&sz=w1600',
     name: 'Rinku Rocker',
     locked: true
   },
   {
-    file: 'assets/player_5.png',
+    file: 'https://drive.google.com/thumbnail?id=1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A&sz=w1600',
     name: 'Mukka Max',
     locked: true
   }
@@ -493,47 +452,54 @@ function selectPlayer() {
   }
 }
 
-/* TEMPORARY CAR SELECTION */
+/* CAR IMAGES */
 const cars = [
-  'Raja Rocket',
-  'Turbo Thunder',
-  'Desert King',
-  'Monster Wheels',
-  'Fire Storm',
-  'Golden Bullet'
+  {
+    name: 'Raja Rocket',
+    file: 'https://drive.google.com/thumbnail?id=1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo&sz=w1600'
+  },
+  {
+    name: 'Turbo Thunder',
+    file: 'https://drive.google.com/thumbnail?id=1Op1sQX5TKHjInAneUprthsTOMPQ0uRgm&sz=w1600'
+  },
+  {
+    name: 'Desert King',
+    file: 'https://drive.google.com/thumbnail?id=15Rg7fK-SbRThhZbIeGSsxFdqhSxdCPa1&sz=w1600'
+  },
+  {
+    name: 'Monster Wheels',
+    file: 'https://drive.google.com/thumbnail?id=1P3yhos8L6wuHvd_yTm1uCTjxQEPLUDNP&sz=w1600'
+  },
+  {
+    name: 'Fire Storm',
+    file: 'https://drive.google.com/thumbnail?id=1liLlBqbloOZrOW4et-T7wAPB7jgIi9YJ&sz=w1600'
+  },
+  {
+    name: 'Golden Bullet',
+    file: 'https://drive.google.com/thumbnail?id=1MEe7kZfbz6jFP5hs8SvSPLm_jUGq4-57&sz=w1600'
+  }
 ];
 
 let carIndex = 0;
 
 function changeCar(direction) {
-  carIndex = (carIndex + direction + cars.length) % cars.length;
+  carIndex =
+    (carIndex + direction + cars.length) % cars.length;
 
-  document.getElementById('carName').textContent =
-    cars[carIndex];
+  document.getElementById('carBg').src = cars[carIndex].file;
+  document.getElementById('carBg').alt = cars[carIndex].name;
+  document.getElementById('itemName').textContent = cars[carIndex].name;
 }
 
 function selectCar() {
-  showNotice(cars[carIndex] + ' निवडली!');
+  showNotice(cars[carIndex].name + ' निवडली!');
 
   setTimeout(function() {
     go('garage');
   }, 700);
 }
 
-/* SERIES SELECTION */
-function chooseSeries(name) {
-  if (name === 'Village') {
-    showNotice('Village Series निवडली!');
-
-    setTimeout(function() {
-      go('garage');
-    }, 700);
-  } else {
-    showNotice(name + ' Series सध्या LOCKED आहे.');
-  }
-}
-
-/* NOTIFICATION MESSAGE */
+/* NOTIFICATION */
 let noticeTimer;
 
 function showNotice(message) {
@@ -553,6 +519,5 @@ function hideNotice() {
   document.getElementById('notice').style.display = 'none';
 }
 </script>
-
 </body>
-  </html>
+</html>
