@@ -1,43 +1,320 @@
+
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Race Ka Raja: Rocket Buggy Racer</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#170a20;font-family:Arial;color:white}
-.screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center}.screen.active{display:flex}
-.art{position:relative;width:100vw;height:100vh}.art img{width:100%;height:100%;object-fit:fill;display:block}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#170a20;font-family:Arial;color:white}
+.screen{position:fixed;inset:0;display:none}
+.screen.active{display:flex;align-items:center;justify-content:center}
+.art{position:absolute;inset:0;width:100%;height:100%}
+.art>img{width:100%;height:100%;object-fit:fill;display:block}
 #bar{position:absolute;left:19.8%;top:56.6%;width:60.6%;height:5.4%;border:2px solid #ffbd22;border-radius:30px;background:#341007;overflow:hidden}
 #fill{height:100%;width:0;background:repeating-linear-gradient(135deg,#ff9b00 0 13px,#ffdb35 13px 23px)}
 #pct{position:absolute;top:63.5%;left:0;right:0;text-align:center;font-size:clamp(12px,2.6vw,24px);font-weight:bold;color:#ffd348}
 .hotspot{position:absolute;border:0;background:transparent;padding:0;touch-action:manipulation}
-#settings{left:7.5%;top:71%;width:12%;height:25%}#help{left:23.2%;top:71%;width:12%;height:25%}#news{left:39%;top:70%;width:12%;height:26%}#signin{left:54.3%;top:70%;width:12%;height:26%}#play{left:72.7%;top:68%;width:19%;height:29%;border-radius:50%}
-#modal{display:none;position:fixed;inset:0;z-index:5;background:#000b;align-items:center;justify-content:center;padding:18px}#modal.show{display:flex}
-.panel{width:min(92vw,540px);max-height:88vh;overflow:auto;text-align:center;background:linear-gradient(#4a1735,#190c23);border:3px solid #ffbd20;border-radius:20px;padding:22px}.panel h2{color:#ffd34a}
-button.action,.choice{border:2px solid #ffbd20;border-radius:12px;padding:11px 15px;background:linear-gradient(#ffdb49,#f28b00);color:#2b1200;font-weight:bold;margin:5px;cursor:pointer}
-#race{background:linear-gradient(#f28a3c,#21131c);text-align:center}#track{height:42vh;min-height:170px;width:80vw;margin:12px auto;background:linear-gradient(90deg,#24723b 0 22%,#3b3b3b 22% 78%,#24723b 78%);border:5px solid #e6a02a;position:relative;overflow:hidden}
+#settings{left:7.5%;top:71%;width:12%;height:25%}
+#help{left:23.2%;top:71%;width:12%;height:25%}
+#news{left:39%;top:70%;width:12%;height:26%}
+#signin{left:54.3%;top:70%;width:12%;height:26%}
+#play{left:72.7%;top:68%;width:19%;height:29%;border-radius:50%}
+button{cursor:pointer;touch-action:manipulation}
+.action,.choice{border:2px solid #ffbd20;border-radius:12px;padding:10px 14px;background:linear-gradient(#ffdb49,#f28b00);color:#2b1200;font-weight:bold;margin:4px;font-size:clamp(12px,2vw,18px)}
+#modal{display:none;position:fixed;inset:0;z-index:5;background:#000b;align-items:center;justify-content:center;padding:12px}
+#modal.show{display:flex}
+.panel{width:min(94vw,650px);max-height:94vh;overflow:auto;text-align:center;background:linear-gradient(#4a1735,#190c23);border:3px solid #ffbd20;border-radius:18px;padding:12px}
+.panel h2{color:#ffd34a;margin:6px}
+#gallery{display:flex;align-items:center;justify-content:center;gap:8px}
+#preview{width:min(62vw,360px);height:min(48vh,360px);object-fit:contain}
+.arrow{font-size:28px;min-width:42px}
+#description{margin:6px;font-size:14px}
+#race{background:linear-gradient(#f28a3c,#21131c);text-align:center;overflow:auto}
+#track{height:42vh;min-height:150px;width:80vw;margin:12px auto;background:linear-gradient(90deg,#24723b 0 22%,#3b3b3b 22% 78%,#24723b 78%);border:5px solid #e6a02a;position:relative;overflow:hidden}
 #track:after{content:"";position:absolute;left:49%;height:100%;width:2%;background:repeating-linear-gradient(to bottom,#fff 0 25px,transparent 25px 50px);animation:dash .5s linear infinite}
-.car{position:absolute;z-index:1;font-size:50px;bottom:12%}#car1{left:35%}#car2{right:25%;bottom:45%}@keyframes dash{to{background-position-y:50px}}
-@media(orientation:portrait){#rotate{display:flex}}#rotate{display:none;position:fixed;inset:0;z-index:10;background:#190b22;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center}
-</style></head><body>
-<section id="loading" class="screen active"><div class="art"><img src="loading.png" alt="Loading screen"><div id="bar"><div id="fill"></div></div><div id="pct">0%</div></div></section>
-<section id="home" class="screen"><div class="art"><img src="home.png" alt="Home screen">
-<button class="hotspot" id="settings" aria-label="Settings"></button><button class="hotspot" id="help" aria-label="Get Help"></button><button class="hotspot" id="news" aria-label="News"></button><button class="hotspot" id="signin" aria-label="Sign in"></button><button class="hotspot" id="play" aria-label="Play"></button></div></section>
-<section id="race" class="screen"><div><h1 style="color:#ffd34a">RACE KA RAJA</h1><p id="session">Village Session</p><div id="track"><span class="car" id="car1">🏎️</span><span class="car" id="car2">🚙</span></div><p>Demo race screen</p><button class="action" id="back">HOME</button></div></section>
-<div id="modal"><div class="panel"><h2 id="title"></h2><div id="body"></div><div id="actions"></div></div></div>
-<div id="rotate"><div style="font-size:50px">📱 ↻</div><b>फोन आडवा करा</b><button class="action" id="try">पुन्हा प्रयत्न करा</button></div>
+.car{position:absolute;z-index:1;font-size:42px;bottom:12%}
+#car1{left:25%}#car2{right:25%;bottom:45%}
+@keyframes dash{to{background-position-y:50px}}
+#rotate{display:none;position:fixed;inset:0;z-index:10;background:#190b22;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center}
+@media(orientation:portrait){#rotate{display:flex}}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<section id="loading" class="screen active">
+ <div class="art">
+  <img src="https://drive.google.com/uc?export=view&id=1dtYrA_6Ib4wk6_BKCI153LcGIDQJbHlV" alt="Loading">
+  <div id="bar"><div id="fill"></div></div>
+  <div id="pct">0%</div>
+ </div>
+</section>
+
+<!-- HOME SCREEN -->
+<section id="home" class="screen">
+ <div class="art">
+  <img src="https://drive.google.com/uc?export=view&id=1GYQjwfzY7wWeMwcMqQtNQwS0bW4h2UUK" alt="Game Home">
+  <button class="hotspot" id="settings" aria-label="Settings"></button>
+  <button class="hotspot" id="help" aria-label="Help"></button>
+  <button class="hotspot" id="news" aria-label="News"></button>
+  <button class="hotspot" id="signin" aria-label="Profile"></button>
+  <button class="hotspot" id="play" aria-label="Play"></button>
+ </div>
+</section>
+
+<!-- ADVENTURE SCREEN -->
+<section id="adventure" class="screen">
+ <div class="art">
+  <img src="https://drive.google.com/uc?export=view&id=1sViX1L1P3gTmFeLGtwlq1qR_Xem7Hp_3" alt="Adventure">
+ </div>
+ <button class="action" style="position:absolute;left:2%;top:3%" onclick="go('home')">← BACK</button>
+ <button class="action" style="position:absolute;left:35%;bottom:5%" onclick="go('series')">ADVENTURE</button>
+ <button class="action" style="position:absolute;right:3%;bottom:5%" onclick="go('powerups')">POWERUPS</button>
+</section>
+
+<!-- CHOOSE SERIES -->
+<section id="series" class="screen">
+ <div class="art">
+  <img src="https://drive.google.com/uc?export=view&id=1SM6OqjlRerfsZFD9LTzKySPgw_JIvOMV" alt="Choose Series">
+ </div>
+ <button class="action" style="position:absolute;left:2%;top:3%" onclick="go('adventure')">← BACK</button>
+ <div style="position:absolute;bottom:3%;left:0;right:0;text-align:center">
+  <button class="choice" onclick="chooseSeries('Village')">Village 🔓</button>
+  <button class="choice" onclick="lockedSeries('City')">City 🔒</button>
+  <button class="choice" onclick="lockedSeries('Mountain')">Mountain 🔒</button>
+  <button class="choice" onclick="lockedSeries('Desert')">Desert 🔒</button>
+  <button class="choice" onclick="lockedSeries('Forest')">Forest 🔒</button>
+ </div>
+</section>
+
+<!-- CAR SELECTION -->
+<section id="cars" class="screen">
+ <div class="art" style="background:linear-gradient(#512512,#160b18)"></div>
+ <button class="action" style="position:absolute;left:2%;top:2%" onclick="go('series')">← BACK</button>
+ <div style="position:relative;text-align:center;width:100%">
+  <h2 style="color:#ffd34a">CHOOSE YOUR CAR</h2>
+  <div id="gallery">
+   <button class="action arrow" onclick="changeItem('car',-1)">❮</button>
+   <img id="preview" alt="Selected car">
+   <button class="action arrow" onclick="changeItem('car',1)">❯</button>
+  </div>
+  <h3 id="itemName">Raja Rocket</h3>
+  <p id="description">Select your racing car!</p>
+  <button class="action" onclick="go('players')">NEXT: PLAYER →</button>
+ </div>
+</section>
+
+<!-- PLAYER SELECTION -->
+<section id="players" class="screen">
+ <div class="art" style="background:linear-gradient(#512512,#160b18)"></div>
+ <button class="action" style="position:absolute;left:2%;top:2%" onclick="go('cars')">← BACK</button>
+ <div style="position:relative;text-align:center;width:100%">
+  <h2 style="color:#ffd34a">CHOOSE YOUR PLAYER</h2>
+  <div id="gallery">
+   <button class="action arrow" onclick="changeItem('player',-1)">❮</button>
+   <img id="playerPreview" alt="Selected player" style="width:min(62vw,360px);height:min(48vh,360px);object-fit:contain">
+   <button class="action arrow" onclick="changeItem('player',1)">❯</button>
+  </div>
+  <h3 id="playerName">Turbo Golu</h3>
+  <p id="playerDescription">Special ability: Samosa Boost</p>
+  <button class="action" onclick="go('powerups')">NEXT: POWERUPS →</button>
+ </div>
+</section>
+
+<!-- POWERUPS SCREEN -->
+<section id="powerups" class="screen">
+ <div class="art">
+  <img src="https://drive.google.com/uc?export=view&id=1ykC0JKp-ELQS73P2D65ojNPZ2yykjZ4G" alt="Powerups">
+ </div>
+ <button class="action" style="position:absolute;left:2%;top:2%" onclick="go('players')">← BACK</button>
+ <button class="action" style="position:absolute;right:3%;bottom:3%" onclick="startRace()">START RACE →</button>
+</section>
+
+<!-- RACE SCREEN -->
+<section id="race" class="screen">
+ <div style="width:100%">
+  <h1 style="color:#ffd34a">RACE KA RAJA</h1>
+  <p id="session">Village Session</p>
+  <p id="raceDetails">Raja Rocket • Turbo Golu</p>
+  <div id="track">
+   <span class="car" id="car1">🏎️</span>
+   <span class="car" id="car2">🚙</span>
+  </div>
+  <p>Demo race screen</p>
+  <button class="action" onclick="go('home')">HOME</button>
+  <button class="action" onclick="go('powerups')">POWERUPS</button>
+ </div>
+</section>
+
+<div id="modal">
+ <div class="panel">
+  <h2 id="title"></h2>
+  <div id="body"></div>
+  <div id="actions"></div>
+ </div>
+</div>
+
+<div id="rotate">
+ <div style="font-size:50px">📱 ↻</div>
+ <b>फोन आडवा करा</b>
+ <button class="action" id="try">पुन्हा प्रयत्न करा</button>
+</div>
+
 <script>
-const screens=[document.getElementById('loading'),document.getElementById('home'),document.getElementById('race')];
-function show(s){screens.forEach(x=>x.classList.remove('active'));s.classList.add('active')}
-let p=0;function loadingStep(){p=Math.min(100,p+2);document.getElementById('fill').style.width=p+'%';document.getElementById('pct').textContent=p+'%';if(p===100)setTimeout(()=>show(screens[1]),400);else setTimeout(loadingStep,55)}loadingStep();
-const modal=document.getElementById('modal'),title=document.getElementById('title'),body=document.getElementById('body'),actions=document.getElementById('actions');
-function open(t,b,buttons){title.textContent=t;body.innerHTML=b;actions.innerHTML='';buttons.forEach(x=>{let el=document.createElement('button');el.className='action';el.textContent=x[0];el.onclick=x[1];actions.appendChild(el)});modal.classList.add('show')}
-function close(){modal.classList.remove('show')}
-let session='Village',sound=true;
-document.getElementById('settings').onclick=()=>open('SETTINGS','<p>Sound: <b>'+ (sound?'ON':'OFF')+'</b></p>',[['Sound ON / OFF',()=>{sound=!sound;open('SETTINGS','<p>Sound: <b>'+(sound?'ON':'OFF')+'</b></p>',[['BACK',close]])}],['BACK',close]]);
-document.getElementById('help').onclick=()=>open('GET HELP','<p>PLAY दाबा, session निवडा आणि START RACE दाबा.</p>',[['OK',close]]);
-document.getElementById('news').onclick=()=>open('NEWS','<p>Welcome to Race Ka Raja: Rocket Buggy Racer!</p>',[['OK',close]]);
-document.getElementById('signin').onclick=()=>open('RACER PROFILE','<p>तुमचे नाव लिहा:</p><input id="name" placeholder="Your name" maxlength="20">',[['SAVE',()=>{let n=document.getElementById('name').value||'Racer';open('WELCOME','<p>Welcome, '+n.replace(/[&<>]/g,'')+'!</p>',[['OK',close]])}],['BACK',close]]);
-document.getElementById('play').onclick=()=>{session='Village';open('CHOOSE SESSION','<p>Session निवडा:</p><div><button class="choice" data-s="Village">Village</button><button class="choice" data-s="City">City</button><button class="choice" data-s="Mountain">Mountain</button><button class="choice" data-s="Desert">Desert</button></div>',[['START RACE',()=>{document.getElementById('session').textContent=session+' Session';close();show(screens[2])}],['BACK',close]]);document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>session=b.dataset.s)};
-document.getElementById('back').onclick=()=>show(screens[1]);
-document.getElementById('try').onclick=async()=>{try{await document.documentElement.requestFullscreen();await screen.orientation.lock('landscape')}catch(e){}};
-</script></body></html>
+const drive=id=>'https://drive.google.com/uc?export=view&id='+id;
+
+const carList=[
+ {name:'Raja Rocket',id:'1PeuhW3YQAaphsL7Nm1TK3P5rXeKFXmQo'},
+ {name:'Turbo Thunder',id:'1Op1sQX5TKHjInAneUprthsTOMPQ0uRgm'},
+ {name:'Desert King',id:'15Rg7fK-SbRThhZbIeGSsxFdqhSxdCPa1'},
+ {name:'Monster Wheels',id:'1P3yhos8L6wuHvd_yTm1uCTjxQEPLUDNP'},
+ {name:'Fire Storm',id:'1liLlBqbloOZrOW4et-T7wAPB7jgIi9YJ'},
+ {name:'Golden Bullet',id:'1MEe7kZfbz6jFP5hs8SvSPLm_jUGq4-57'}
+];
+
+const playerList=[
+ {name:'Turbo Golu',id:'1etvsRlyh3Sc-4BYESFtsel5H8MlHkNO4',ability:'Samosa Boost'},
+ {name:'Nitro Chotu',id:'19wQXN7ODSc5GrPZm3vWTIY0dRmtNSLZ7',ability:'Bee Attack'},
+ {name:'Dr. Bubbly',id:'1aYpPdXUVu9OWMILsfgKJhINUQhZYhz_-',ability:'Acid Trap'},
+ {name:'Rinku Rocker',id:'1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW',ability:'DJ Shockwave'},
+ {name:'Mukka Max',id:'1rGPQZvsfk5gdYaPZgDRxb6S9OxIQcw5A',ability:'Rocket Storm'},
+ {name:'Buslly Baba',id:'1gaMw6nr7Rne_PCJNEQYCRGi_o1JqBbwW',ability:'Missile Boost'}
+];
+
+let carIndex=0,playerIndex=0,session='Village',sound=true;
+
+function go(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ if(id==='cars')updateCar();
+ if(id==='players')updatePlayer();
+}
+
+function changeItem(type,step){
+ if(type==='car'){
+  carIndex=(carIndex+step+carList.length)%carList.length;
+  updateCar();
+ }else{
+  playerIndex=(playerIndex+step+playerList.length)%playerList.length;
+  updatePlayer();
+ }
+}
+
+function updateCar(){
+ const c=carList[carIndex];
+ document.getElementById('preview').src=drive(c.id);
+ document.getElementById('itemName').textContent=c.name;
+ document.getElementById('description').textContent='Car '+(carIndex+1)+' of 6';
+}
+
+function updatePlayer(){
+ const p=playerList[playerIndex];
+ document.getElementById('playerPreview').src=drive(p.id);
+ document.getElementById('playerName').textContent=p.name;
+ document.getElementById('playerDescription').textContent='Special ability: '+p.ability;
+}
+
+function chooseSeries(name){
+ session=name;
+ go('cars');
+}
+
+function lockedSeries(name){
+ openModal(name,'This series is locked. Village is available now.',[
+  ['OK',closeModal]
+ ]);
+}
+
+function startRace(){
+ document.getElementById('session').textContent=session+' Session';
+ document.getElementById('raceDetails').textContent=
+  carList[carIndex].name+' • '+playerList[playerIndex].name;
+ go('race');
+}
+
+const modal=document.getElementById('modal');
+function openModal(t,b,buttons){
+ document.getElementById('title').textContent=t;
+ document.getElementById('body').textContent=b;
+ const a=document.getElementById('actions');
+ a.innerHTML='';
+ buttons.forEach(x=>{
+  const el=document.createElement('button');
+  el.className='action';
+  el.textContent=x[0];
+  el.onclick=x[1];
+  a.appendChild(el);
+ });
+ modal.classList.add('show');
+}
+function closeModal(){modal.classList.remove('show')}
+
+document.getElementById('settings').onclick=()=>openModal(
+ 'SETTINGS','Sound: '+(sound?'ON':'OFF'),[
+  ['Sound ON / OFF',()=>{
+   sound=!sound;
+   openModal('SETTINGS','Sound: '+(sound?'ON':'OFF'),[['BACK',closeModal]]);
+  }],
+  ['BACK',closeModal]
+ ]);
+
+document.getElementById('help').onclick=()=>openModal(
+ 'GET HELP','PLAY दाबा, Adventure निवडा, Series निवडा आणि पुढे जा.',
+ [['OK',closeModal]]
+);
+
+document.getElementById('news').onclick=()=>openModal(
+ 'NEWS','Welcome to Race Ka Raja: Rocket Buggy Racer!',
+ [['OK',closeModal]]
+);
+
+document.getElementById('signin').onclick=()=>{
+ const body=document.getElementById('body');
+ document.getElementById('title').textContent='RACER PROFILE';
+ body.innerHTML='<input id="name" placeholder="Your name" maxlength="20">';
+ const a=document.getElementById('actions');
+ a.innerHTML='';
+ const save=document.createElement('button');
+ save.className='action';save.textContent='SAVE';
+ save.onclick=()=>{
+  const n=(document.getElementById('name').value||'Racer').replace(/[&<>]/g,'');
+  openModal('WELCOME','Welcome, '+n+'!',[['OK',closeModal]]);
+ };
+ a.appendChild(save);
+ const back=document.createElement('button');
+ back.className='action';back.textContent='BACK';back.onclick=closeModal;
+ a.appendChild(back);
+ modal.classList.add('show');
+};
+
+document.getElementById('play').onclick=()=>go('adventure');
+
+let progress=0;
+function loadingStep(){
+ progress=Math.min(100,progress+2);
+ document.getElementById('fill').style.width=progress+'%';
+ document.getElementById('pct').textContent=progress+'%';
+ if(progress===100){
+  setTimeout(()=>go('home'),400);
+ }else{
+  setTimeout(loadingStep,55);
+ }
+}
+loadingStep();
+
+document.getElementById('try').onclick=async()=>{
+ try{
+  await document.documentElement.requestFullscreen();
+  if(screen.orientation&&screen.orientation.lock){
+   await screen.orientation.lock('landscape');
+  }
+ }catch(e){}
+};
+
+updateCar();
+updatePlayer();
+</script>
+</body>
+</html>
