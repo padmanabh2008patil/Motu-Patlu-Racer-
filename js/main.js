@@ -1,14 +1,45 @@
 
 const screens = document.querySelectorAll(".screen");
+const screenHistory = [];
 
-function go(id) {
-  screens.forEach((screen) => {
+function displayScreen(id) {
+  if (!document.getElementById(id)) return;
+
+  screens.forEach(screen => {
     screen.classList.toggle("active", screen.id === id);
   });
+
   hideNotice();
 }
 
-/* Loading bar: 0% to 100% */
+function go(id) {
+  const current = document.querySelector(".screen.active");
+  if (!document.getElementById(id)) return;
+  if (current && current.id === id) return;
+
+  if (current && current.id !== "loading") {
+    screenHistory.push(current.id);
+  }
+
+  displayScreen(id);
+}
+
+function backScreen() {
+  const current = document.querySelector(".screen.active");
+
+  while (screenHistory.length) {
+    const previous = screenHistory.pop();
+
+    if (current && previous !== current.id) {
+      displayScreen(previous);
+      return;
+    }
+  }
+
+  displayScreen("garage");
+}
+
+/* Loading */
 let progress = 0;
 const progressEl = document.getElementById("progress");
 const percentEl = document.getElementById("loadPercent");
@@ -21,11 +52,15 @@ const loader = setInterval(() => {
 
   if (progress >= 100) {
     clearInterval(loader);
-    setTimeout(() => go("home"), 400);
+    screenHistory.length = 0;
+    setTimeout(() => displayScreen("home"), 400);
   }
 }, 35);
 
-/* Player and car selection */
+/* Six players and six cars */
+const TOTAL_PLAYERS = 6;
+const TOTAL_CARS = 6;
+
 let playerIndex = 0;
 let carIndex = 0;
 let selectedPlayer = 0;
@@ -43,42 +78,66 @@ function openCars() {
   go("cars");
 }
 
-/* Move through all 6 players or cars */
+/* Preload images to reduce delay */
+const imageCache = {};
+
+function preloadImages(prefix, total) {
+  for (let i = 1; i <= total; i++) {
+    const image = new Image();
+    image.src = `images/${prefix}${i}.png`;
+    imageCache[`${prefix}${i}`] = image;
+  }
+}
+
+preloadImages("player", TOTAL_PLAYERS);
+preloadImages("car", TOTAL_CARS);
+
 function changeItem(type, direction) {
   if (type === "player") {
-    playerIndex = (playerIndex + direction + 6) % 6;
+    playerIndex =
+      (playerIndex + direction + TOTAL_PLAYERS) % TOTAL_PLAYERS;
   } else if (type === "car") {
-    carIndex = (carIndex + direction + 6) % 6;
+    carIndex =
+      (carIndex + direction + TOTAL_CARS) % TOTAL_CARS;
+  } else {
+    return;
   }
 
   updateItem(type);
 }
 
-/* Display the current player or car */
 function updateItem(type) {
-  if (type === "player") {
-    const image = document.getElementById("playerBg");
-    if (image) {
-      image.src = `images/player${playerIndex + 1}.png`;
-    }
-  } else if (type === "car") {
-    const image = document.getElementById("carBg");
-    if (image) {
-      image.src = `images/car${carIndex + 1}.png`;
-    }
+  const isPlayer = type === "player";
+  const index = isPlayer ? playerIndex : carIndex;
+  const prefix = isPlayer ? "player" : "car";
+  const imageId = isPlayer ? "playerBg" : "carBg";
+  const image = document.getElementById(imageId);
+
+  if (!image) return;
+
+  const fileName = `${prefix}${index + 1}`;
+  const cached = imageCache[fileName];
+
+  if (cached && cached.complete && cached.naturalWidth > 0) {
+    image.src = cached.src;
+  } else {
+    image.src = `images/${fileName}.png`;
   }
 }
 
-/* Select silently: no message in any language */
 function selectItem(type) {
   if (type === "player") {
     selectedPlayer = playerIndex;
   } else if (type === "car") {
     selectedCar = carIndex;
+  } else {
+    return;
   }
 
-  hideNotice();
-  go("garage");
+  // Do not show a selection message.
+  // Return to Garage without adding another history entry.
+  screenHistory.length = 0;
+  displayScreen("garage");
 }
 
 /* Series selection */
@@ -88,21 +147,22 @@ function chooseSeries(name, locked) {
     return;
   }
 
-  hideNotice();
-  go("garage");
+  screenHistory.length = 0;
+  displayScreen("garage");
 }
 
 /* Messages */
 let noticeTimer;
 
 function showNotice(message) {
+  hideNotice();
+  if (!message) return;
+
   const notice = document.getElementById("notice");
   if (!notice) return;
 
   notice.textContent = message;
   notice.style.display = "block";
-
-  clearTimeout(noticeTimer);
   noticeTimer = setTimeout(hideNotice, 2200);
 }
 
