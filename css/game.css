@@ -203,3 +203,26 @@ button {
     display: flex !important;
   }
 }
+
+/* Menu Player idle animation */
+#menuPlayer {
+  position: absolute;
+  z-index: 3;
+  left: 56%;
+  top: 21%;
+  width: 17%;
+  height: 53%;
+  object-fit: contain;
+  pointer-events: none;
+  transform-origin: center bottom;
+  animation: playerIdle 1.4s ease-in-out infinite;
+}
+
+@keyframes playerIdle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(-1deg);
+  }
+}
