@@ -2,403 +2,191 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#100b08">
-<title>Race Ka Raja - Rocket Buggy Racer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#100b08">
+  <title>Race Ka Raja - Rocket Buggy Racer</title>
 
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-
-html,body{
- margin:0;width:100%;height:100%;
- overflow:hidden;background:#100b08;
- font-family:Arial,sans-serif;
-}
-
-#game{
- position:fixed;inset:0;
- width:100%;height:100%;height:100dvh;
- overflow:hidden;background:#100b08;
-}
-
-.screen{position:absolute;inset:0;display:none;overflow:hidden}
-.screen.active{display:block}
-
-.bg{
- position:absolute;inset:0;
- width:100%;height:100%;
- object-fit:fill;
-}
-
-button{font-family:Arial,sans-serif;cursor:pointer;touch-action:manipulation}
-
-.hit{
- position:absolute;z-index:4;
- padding:0;border:0;background:transparent;
-}
-
-/* Back button: one button per screen */
-.backBtn{
- position:absolute;z-index:10;
- left:1%;top:2%;
- width:58px;height:62px;
- padding:0;border:0;background:transparent;
- color:white;
-}
-.backCircle{
- width:42px;height:42px;margin:auto;
- display:flex;align-items:center;justify-content:center;
- border:3px solid #ffcf43;border-radius:50%;
- background:linear-gradient(#ffb52a,#f15a00);
- box-shadow:0 2px 4px #000;
- font-size:27px;font-weight:bold;
-}
-.backText{
- display:block;font-size:12px;font-weight:bold;
- text-shadow:1px 2px 3px #000;
-}
-
-/* Loading */
-#progressTrack{
- position:absolute;left:20.7%;top:78.2%;
- width:58.5%;height:5.8%;
- overflow:hidden;border:3px solid #ffbd25;
- border-radius:999px;background:#351000;
-}
-#progress{
- width:0%;height:100%;
- background:repeating-linear-gradient(
-  45deg,#ff5b00 0 10px,#ff9a00 10px 20px
- );
-}
-#loadPercent{
- position:absolute;top:86%;width:100%;
- color:white;text-align:center;font-weight:bold;
- font-size:clamp(12px,2vw,24px);
- text-shadow:2px 3px 3px black;
-}
-
-/* Visible navigation arrows */
-.navArrow{
- position:absolute;z-index:8;top:43%;
- width:clamp(44px,7vw,76px);
- height:clamp(55px,12vh,88px);
- display:flex;align-items:center;justify-content:center;
- color:white;font-size:clamp(30px,5vw,48px);
- font-weight:bold;
- border:3px solid #a84200;border-radius:14px;
- background:linear-gradient(#ffb52a,#ff6900);
- box-shadow:0 3px 5px #0008;
- text-shadow:1px 2px 3px #542000;
-}
-.navArrow.left{left:1.5%}
-.navArrow.right{right:1.5%}
-.navArrow:active,.backBtn:active{transform:scale(.94)}
-
-/* Selection confirmation */
-#notice{
- display:none;position:absolute;z-index:20;
- left:50%;bottom:3%;transform:translateX(-50%);
- max-width:90%;padding:9px 15px;
- border:2px solid #ffc22c;border-radius:10px;
- background:#190700f2;color:white;
- text-align:center;font-size:15px;
-}
-
-/* Animated waving hand on the menu */
-#driverHi{
- position:absolute;z-index:6;
- left:53%;top:30%;
- font-size:clamp(25px,5vw,48px);
- transform-origin:bottom center;
- animation:wave 1s ease-in-out infinite;
- pointer-events:none;
- filter:drop-shadow(2px 3px 2px #000);
-}
-@keyframes wave{
- 0%,100%{transform:rotate(0deg) translateY(0)}
- 25%{transform:rotate(20deg) translateY(-4px)}
- 50%{transform:rotate(-12deg) translateY(-7px)}
- 75%{transform:rotate(20deg) translateY(-4px)}
-}
-
-@media(orientation:portrait){
- #rotateMessage{
-  display:flex!important;
- }
-}
-#rotateMessage{
- display:none;position:absolute;inset:0;z-index:100;
- align-items:center;justify-content:center;
- padding:10%;background:#180900;color:white;
- text-align:center;font-size:22px;
-}
-</style>
+  <link rel="stylesheet" href="css/game.css">
 </head>
 
 <body>
 <div id="game">
 
-<div id="rotateMessage">
- कृपया मोबाईल आडवा (Landscape) फिरवा.
+  <div id="rotateMessage">
+    कृपया मोबाईल आडवा (Landscape) फिरवा.
+  </div>
+
+  <!-- 1: LOADING SCREEN -->
+  <section id="loading" class="screen active">
+    <img class="bg" src="images/loading.png" alt="Loading">
+    <div id="progressTrack">
+      <div id="progress"></div>
+    </div>
+    <div id="loadPercent">Loading 0%</div>
+  </section>
+
+  <!-- 2: HOME SCREEN -->
+  <section id="home" class="screen">
+    <img class="bg" src="images/home.png" alt="Race Ka Raja Home">
+
+    <button class="hit" aria-label="Play"
+      style="left:72%;top:62%;width:25%;height:34%"
+      onclick="go('adventure')">
+    </button>
+  </section>
+
+  <!-- 3: ADVENTURE SCREEN -->
+  <section id="adventure" class="screen">
+    <img class="bg" src="images/adventure.png" alt="Adventure">
+
+    <button class="backBtn" aria-label="Back"
+      onclick="go('home')">
+      <span class="backCircle">◀</span>
+      <span class="backText">Back</span>
+    </button>
+
+    <button class="hit" aria-label="Adventure"
+      style="left:35%;top:60%;width:30%;height:36%"
+      onclick="go('garage')">
+    </button>
+  </section>
+
+  <!-- 4: MAIN MENU -->
+  <section id="garage" class="screen">
+    <img class="bg" src="images/garage.png" alt="Game Menu">
+
+    <button class="backBtn" aria-label="Back"
+      onclick="go('adventure')">
+      <span class="backCircle">◀</span>
+      <span class="backText">Back</span>
+    </button>
+
+    <!-- Upgrade -->
+    <button class="hit" aria-label="Upgrade"
+      style="left:0%;top:69%;width:16%;height:29%"
+      onclick="showNotice('Upgrade लवकरच जोडू.')">
+    </button>
+
+    <!-- Powerups -->
+    <button class="hit" aria-label="Powerups"
+      style="left:17%;top:69%;width:16%;height:29%"
+      onclick="go('powerups')">
+    </button>
+
+    <!-- Switch Car -->
+    <button class="hit" aria-label="Switch Car"
+      style="left:34%;top:69%;width:15%;height:29%"
+      onclick="openCars()">
+    </button>
+
+    <!-- Switch Player -->
+    <button class="hit" aria-label="Switch Player"
+      style="left:50%;top:69%;width:16%;height:29%"
+      onclick="openPlayers()">
+    </button>
+
+    <!-- Choose Series -->
+    <button class="hit" aria-label="Choose Series"
+      style="left:67%;top:69%;width:18%;height:29%"
+      onclick="go('series')">
+    </button>
+  </section>
+
+  <!-- POWERUPS SCREEN -->
+  <section id="powerups" class="screen">
+    <img class="bg" src="images/powerups.png" alt="Powerups">
+
+    <button class="backBtn" aria-label="Back"
+      onclick="go('garage')">
+      <span class="backCircle">◀</span>
+      <span class="backText">Back</span>
+    </button>
+  </section>
+
+  <!-- CHOOSE SERIES SCREEN -->
+  <section id="series" class="screen">
+    <img class="bg" src="images/series.png" alt="Choose Series">
+
+    <button class="backBtn" aria-label="Back"
+      onclick="go('garage')">
+      <span class="backCircle">◀</span>
+      <span class="backText">Back</span>
+    </button>
+
+    <button class="hit" aria-label="Village"
+      style="left:5%;top:20%;width:18%;height:65%"
+      onclick="chooseSeries('Village',false)">
+    </button>
+
+    <button class="hit" aria-label="City"
+      style="left:24%;top:20%;width:18%;height:65%"
+      onclick="chooseSeries('City',true)">
+    </button>
+
+    <button class="hit" aria-label="Mountain"
+      style="left:43%;top:20%;width:18%;height:65%"
+      onclick="chooseSeries('Mountain',true)">
+    </button>
+
+    <button class="hit" aria-label="Desert"
+      style="left:62%;top:20%;width:18%;height:65%"
+      onclick="chooseSeries('Desert',true)">
+    </button>
+
+    <button class="hit" aria-label="Forest"
+      style="left:81%;top:20%;width:18%;height:65%"
+      onclick="chooseSeries('Forest',true)">
+    </button>
+  </section>
+
+  <!-- PLAYER SELECTION -->
+  <section id="players" class="screen">
+    <img id="playerBg" class="bg" src="images/player1.png" alt="Player">
+
+    <button class="backBtn" aria-label="Back"
+      onclick="go('garage')">
+      <span class="backCircle">◀</span>
+      <span class="backText">Back</span>
+    </button>
+
+    <button class="navArrow left" aria-label="Previous Player"
+      onclick="changeItem('player',-1)">❮</button>
+
+    <button class="navArrow right" aria-label="Next Player"
+      onclick="changeItem('player',1)">❯</button>
+
+    <button class="hit" aria-label="Select Player"
+      style="left:40%;bottom:0;width:20%;height:18%"
+      onclick="selectItem('player')">
+    </button>
+  </section>
+
+  <!-- CAR SELECTION -->
+  <section id="cars" class="screen">
+    <img id="carBg" class="bg" src="images/car1.png" alt="Car">
+
+    <button class="backBtn" aria-label="Back"
+      onclick="go('garage')">
+      <span class="backCircle">◀</span>
+      <span class="backText">Back</span>
+    </button>
+
+    <button class="navArrow left" aria-label="Previous Car"
+      onclick="changeItem('car',-1)">❮</button>
+
+    <button class="navArrow right" aria-label="Next Car"
+      onclick="changeItem('car',1)">❯</button>
+
+    <button class="hit" aria-label="Select Car"
+      style="left:40%;bottom:0;width:20%;height:18%"
+      onclick="selectItem('car')">
+    </button>
+  </section>
+
+  <div id="notice" role="status"></div>
 </div>
 
-<!-- 1: LOADING -->
-<section id="loading" class="screen active">
- <img class="bg" src="images/loading.png" alt="Loading">
- <div id="progressTrack"><div id="progress"></div></div>
- <div id="loadPercent">Loading 0%</div>
-</section>
-
-<!-- 2: HOME -->
-<section id="home" class="screen">
- <img class="bg" src="images/home.png" alt="Race Ka Raja Home">
-
- <button class="hit" aria-label="Play"
- style="left:72%;top:62%;width:25%;height:34%"
- onclick="go('adventure')"></button>
-</section>
-
-<!-- 3: ADVENTURE -->
-<section id="adventure" class="screen">
- <img class="bg" src="images/adventure.png" alt="Adventure">
-
- <button class="backBtn" aria-label="Back"
- onclick="go('home')">
-  <span class="backCircle">◀</span>
-  <span class="backText">Back</span>
- </button>
-
- <button class="hit" aria-label="Adventure"
- style="left:35%;top:60%;width:30%;height:36%"
- onclick="go('garage')"></button>
-</section>
-
-<!-- 4: MAIN MENU -->
-<section id="garage" class="screen">
- <img class="bg" src="images/garage.png" alt="Game Menu">
-
- <button class="backBtn" aria-label="Back"
- onclick="go('adventure')">
-  <span class="backCircle">◀</span>
-  <span class="backText">Back</span>
- </button>
-
- <!-- Waving greeting animation -->
- <div id="driverHi" aria-label="Hi">👋</div>
-
- <!-- Upgrade -->
- <button class="hit" aria-label="Upgrade"
- style="left:0%;top:69%;width:16%;height:29%"
- onclick="showNotice('Upgrade लवकरच जोडू.')"></button>
-
- <!-- Powerups -->
- <button class="hit" aria-label="Powerups"
- style="left:17%;top:69%;width:16%;height:29%"
- onclick="go('powerups')"></button>
-
- <!-- Switch Car -->
- <button class="hit" aria-label="Switch Car"
- style="left:34%;top:69%;width:15%;height:29%"
- onclick="openCars()"></button>
-
- <!-- Switch Player -->
- <button class="hit" aria-label="Switch Player"
- style="left:50%;top:69%;width:16%;height:29%"
- onclick="openPlayers()"></button>
-
- <!-- Choose Series -->
- <button class="hit" aria-label="Choose Series"
- style="left:67%;top:69%;width:18%;height:29%"
- onclick="go('series')"></button>
-</section>
-
-<!-- POWERUPS -->
-<section id="powerups" class="screen">
- <img class="bg" src="images/powerups.png" alt="Powerups">
-
- <button class="backBtn" aria-label="Back"
- onclick="go('garage')">
-  <span class="backCircle">◀</span>
-  <span class="backText">Back</span>
- </button>
-</section>
-
-<!-- CHOOSE SERIES -->
-<section id="series" class="screen">
- <img class="bg" src="images/series.png" alt="Choose Series">
-
- <button class="backBtn" aria-label="Back"
- onclick="go('garage')">
-  <span class="backCircle">◀</span>
-  <span class="backText">Back</span>
- </button>
-
- <button class="hit" aria-label="Village"
- style="left:5%;top:20%;width:18%;height:65%"
- onclick="chooseSeries('Village',false)"></button>
-
- <button class="hit" aria-label="City"
- style="left:24%;top:20%;width:18%;height:65%"
- onclick="chooseSeries('City',true)"></button>
-
- <button class="hit" aria-label="Mountain"
- style="left:43%;top:20%;width:18%;height:65%"
- onclick="chooseSeries('Mountain',true)"></button>
-
- <button class="hit" aria-label="Desert"
- style="left:62%;top:20%;width:18%;height:65%"
- onclick="chooseSeries('Desert',true)"></button>
-
- <button class="hit" aria-label="Forest"
- style="left:81%;top:20%;width:18%;height:65%"
- onclick="chooseSeries('Forest',true)"></button>
-</section>
-
-<!-- PLAYER SELECTION: NO PLAYER NUMBER TEXT -->
-<section id="players" class="screen">
- <img id="playerBg" class="bg" src="images/player1.png" alt="">
-
- <button class="backBtn" aria-label="Back"
- onclick="go('garage')">
-  <span class="backCircle">◀</span>
-  <span class="backText">Back</span>
- </button>
-
- <button class="navArrow left" aria-label="Previous Player"
- onclick="changeItem('player',-1)">❮</button>
-
- <button class="navArrow right" aria-label="Next Player"
- onclick="changeItem('player',1)">❯</button>
-
- <button class="hit" aria-label="Select Player"
- style="left:40%;bottom:0;width:20%;height:18%"
- onclick="selectItem('player')"></button>
-</section>
-
-<!-- CAR SELECTION: NO CAR NUMBER TEXT -->
-<section id="cars" class="screen">
- <img id="carBg" class="bg" src="images/car1.png" alt="">
-
- <button class="backBtn" aria-label="Back"
- onclick="go('garage')">
-  <span class="backCircle">◀</span>
-  <span class="backText">Back</span>
- </button>
-
- <button class="navArrow left" aria-label="Previous Car"
- onclick="changeItem('car',-1)">❮</button>
-
- <button class="navArrow right" aria-label="Next Car"
- onclick="changeItem('car',1)">❯</button>
-
- <button class="hit" aria-label="Select Car"
- style="left:40%;bottom:0;width:20%;height:18%"
- onclick="selectItem('car')"></button>
-</section>
-
-<div id="notice" role="status"></div>
-</div>
-
-<script>
-const screens = document.querySelectorAll('.screen');
-
-function go(id){
- screens.forEach(s => s.classList.toggle('active',s.id===id));
- hideNotice();
-}
-
-let progress=0;
-const progressEl=document.getElementById('progress');
-const percentEl=document.getElementById('loadPercent');
-
-const loader=setInterval(()=>{
- progress=Math.min(100,progress+1);
- progressEl.style.width=progress+'%';
- percentEl.textContent='Loading '+progress+'%';
-
- if(progress>=100){
-  clearInterval(loader);
-  setTimeout(()=>go('home'),400);
- }
-},35);
-
-/* Six players and six cars */
-let playerIndex=0;
-let carIndex=0;
-let selectedPlayer=0;
-let selectedCar=0;
-
-function openPlayers(){
- playerIndex=selectedPlayer;
- updateItem('player');
- go('players');
-}
-
-function openCars(){
- carIndex=selectedCar;
- updateItem('car');
- go('cars');
-}
-
-function changeItem(type,direction){
- if(type==='player'){
-  playerIndex=(playerIndex+direction+6)%6;
- }else{
-  carIndex=(carIndex+direction+6)%6;
- }
- updateItem(type);
-}
-
-function updateItem(type){
- if(type==='player'){
-  document.getElementById('playerBg').src=
-   'images/player'+(playerIndex+1)+'.png';
- }else{
-  document.getElementById('carBg').src=
-   'images/car'+(carIndex+1)+'.png';
- }
-}
-
-function selectItem(type){
- if(type==='player'){
-  selectedPlayer=playerIndex;
-  showNotice('Player निवडला!');
- }else{
-  selectedCar=carIndex;
-  showNotice('Car निवडली!');
- }
-
- setTimeout(()=>go('garage'),700);
-}
-
-/* Series */
-function chooseSeries(name,locked){
- if(locked){
-  showNotice(name+' सध्या LOCKED आहे.');
- }else{
-  showNotice(name+' Series निवडली!');
-  setTimeout(()=>go('garage'),700);
- }
-}
-
-/* Message */
-let noticeTimer;
-
-function showNotice(message){
- const n=document.getElementById('notice');
- n.textContent=message;
- n.style.display='block';
- clearTimeout(noticeTimer);
- noticeTimer=setTimeout(hideNotice,2200);
-}
-
-function hideNotice(){
- const n=document.getElementById('notice');
- n.style.display='none';
- clearTimeout(noticeTimer);
-}
-</script>
+<script src="js/main.js"></script>
 </body>
 </html>
