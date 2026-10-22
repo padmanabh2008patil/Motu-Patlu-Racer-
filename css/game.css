@@ -1,1 +1,216 @@
 
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #100b08;
+  font-family: Arial, sans-serif;
+}
+
+#game {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #100b08;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+}
+
+.screen.active {
+  display: block;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+button {
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.hit {
+  position: absolute;
+  z-index: 4;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* Back button */
+.backBtn {
+  position: absolute;
+  z-index: 10;
+  left: 1%;
+  top: 2%;
+  width: 58px;
+  height: 62px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: white;
+}
+
+.backCircle {
+  width: 42px;
+  height: 42px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #ffcf43;
+  border-radius: 50%;
+  background: linear-gradient(#ffb52a, #f15a00);
+  box-shadow: 0 2px 4px #000;
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.backText {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 2px 3px #000;
+}
+
+/* Loading bar */
+#progressTrack {
+  position: absolute;
+  left: 20.7%;
+  top: 78.2%;
+  width: 58.5%;
+  height: 5.8%;
+  overflow: hidden;
+  border: 3px solid #ffbd25;
+  border-radius: 999px;
+  background: #351000;
+}
+
+#progress {
+  width: 0%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #ff5b00 0 10px,
+    #ff9a00 10px 20px
+  );
+}
+
+#loadPercent {
+  position: absolute;
+  top: 86%;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: clamp(12px, 2vw, 24px);
+  text-shadow: 2px 3px 3px black;
+}
+
+/* Existing selection arrows */
+.navArrow {
+  position: absolute;
+  z-index: 8;
+  top: 43%;
+  width: clamp(44px, 7vw, 76px);
+  height: clamp(55px, 12vh, 88px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: bold;
+  border: 3px solid #a84200;
+  border-radius: 14px;
+  background: linear-gradient(#ffb52a, #ff6900);
+  box-shadow: 0 3px 5px #0008;
+  text-shadow: 1px 2px 3px #542000;
+}
+
+.navArrow.left {
+  left: 1.5%;
+}
+
+.navArrow.right {
+  right: 1.5%;
+}
+
+.navArrow:active,
+.backBtn:active {
+  transform: scale(0.94);
+}
+
+/* Messages */
+#notice {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: 3%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 9px 15px;
+  border: 2px solid #ffc22c;
+  border-radius: 10px;
+  background: #190700f2;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* Player movement animation */
+#playerBg {
+  will-change: transform;
+  animation: playerMove 2.5s ease-in-out infinite;
+}
+
+@keyframes playerMove {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(5px) translateY(-3px);
+  }
+}
+
+/* Landscape mode message */
+#rotateMessage {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 10%;
+  background: #180900;
+  color: white;
+  text-align: center;
+  font-size: 22px;
+}
+
+@media (orientation: portrait) {
+  #rotateMessage {
+    display: flex !important;
+  }
+}
+
