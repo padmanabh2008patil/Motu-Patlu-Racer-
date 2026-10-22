@@ -16,8 +16,8 @@ const percentEl = document.getElementById("loadPercent");
 const loader = setInterval(() => {
   progress = Math.min(100, progress + 1);
 
-  progressEl.style.width = progress + "%";
-  percentEl.textContent = "Loading " + progress + "%";
+  if (progressEl) progressEl.style.width = progress + "%";
+  if (percentEl) percentEl.textContent = "Loading " + progress + "%";
 
   if (progress >= 100) {
     clearInterval(loader);
@@ -43,46 +43,53 @@ function openCars() {
   go("cars");
 }
 
+/* Move through all 6 players or cars */
 function changeItem(type, direction) {
   if (type === "player") {
     playerIndex = (playerIndex + direction + 6) % 6;
-  } else {
+  } else if (type === "car") {
     carIndex = (carIndex + direction + 6) % 6;
   }
 
   updateItem(type);
 }
 
+/* Display the current player or car */
 function updateItem(type) {
   if (type === "player") {
-    document.getElementById("playerBg").src =
-      "images/player" + (playerIndex + 1) + ".png";
-  } else {
-    document.getElementById("carBg").src =
-      "images/car" + (carIndex + 1) + ".png";
+    const image = document.getElementById("playerBg");
+    if (image) {
+      image.src = `images/player${playerIndex + 1}.png`;
+    }
+  } else if (type === "car") {
+    const image = document.getElementById("carBg");
+    if (image) {
+      image.src = `images/car${carIndex + 1}.png`;
+    }
   }
 }
 
+/* Select silently: no message in any language */
 function selectItem(type) {
   if (type === "player") {
     selectedPlayer = playerIndex;
-    showNotice("Player निवडला!");
-  } else {
+  } else if (type === "car") {
     selectedCar = carIndex;
-    showNotice("Car निवडली!");
   }
 
-  setTimeout(() => go("garage"), 700);
+  hideNotice();
+  go("garage");
 }
 
 /* Series selection */
 function chooseSeries(name, locked) {
   if (locked) {
-    showNotice(name + " सध्या LOCKED आहे.");
-  } else {
-    showNotice(name + " Series निवडली!");
-    setTimeout(() => go("garage"), 700);
+    hideNotice();
+    return;
   }
+
+  hideNotice();
+  go("garage");
 }
 
 /* Messages */
@@ -90,6 +97,8 @@ let noticeTimer;
 
 function showNotice(message) {
   const notice = document.getElementById("notice");
+  if (!notice) return;
+
   notice.textContent = message;
   notice.style.display = "block";
 
@@ -99,8 +108,10 @@ function showNotice(message) {
 
 function hideNotice() {
   const notice = document.getElementById("notice");
-  if (!notice) return;
+  if (notice) {
+    notice.style.display = "none";
+    notice.textContent = "";
+  }
 
-  notice.style.display = "none";
   clearTimeout(noticeTimer);
 }
