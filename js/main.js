@@ -3,7 +3,8 @@ const screens = document.querySelectorAll(".screen");
 const screenHistory = [];
 
 function displayScreen(id) {
-  if (!document.getElementById(id)) return;
+  const target = document.getElementById(id);
+  if (!target) return;
 
   screens.forEach(screen => {
     screen.classList.toggle("active", screen.id === id);
@@ -12,6 +13,7 @@ function displayScreen(id) {
   hideNotice();
 }
 
+/* Screen navigation */
 function go(id) {
   const current = document.querySelector(".screen.active");
   if (!document.getElementById(id)) return;
@@ -27,10 +29,11 @@ function go(id) {
 function backScreen() {
   const current = document.querySelector(".screen.active");
 
-  while (screenHistory.length) {
+  while (screenHistory.length > 0) {
     const previous = screenHistory.pop();
 
-    if (current && previous !== current.id) {
+    if (current && previous !== current.id &&
+        document.getElementById(previous)) {
       displayScreen(previous);
       return;
     }
@@ -48,7 +51,9 @@ const loader = setInterval(() => {
   progress = Math.min(100, progress + 1);
 
   if (progressEl) progressEl.style.width = progress + "%";
-  if (percentEl) percentEl.textContent = "Loading " + progress + "%";
+  if (percentEl) {
+    percentEl.textContent = "Loading " + progress + "%";
+  }
 
   if (progress >= 100) {
     clearInterval(loader);
@@ -66,6 +71,22 @@ let carIndex = 0;
 let selectedPlayer = 0;
 let selectedCar = 0;
 
+/* Preload all selection images */
+const imageCache = {};
+
+function preloadImages(prefix, total) {
+  for (let i = 1; i <= total; i++) {
+    const image = new Image();
+    const fileName = `${prefix}${i}`;
+    image.src = `images/${fileName}.png`;
+    imageCache[fileName] = image;
+  }
+}
+
+preloadImages("player", TOTAL_PLAYERS);
+preloadImages("car", TOTAL_CARS);
+
+/* Open selection screens */
 function openPlayers() {
   playerIndex = selectedPlayer;
   updateItem("player");
@@ -78,20 +99,7 @@ function openCars() {
   go("cars");
 }
 
-/* Preload images to reduce delay */
-const imageCache = {};
-
-function preloadImages(prefix, total) {
-  for (let i = 1; i <= total; i++) {
-    const image = new Image();
-    image.src = `images/${prefix}${i}.png`;
-    imageCache[`${prefix}${i}`] = image;
-  }
-}
-
-preloadImages("player", TOTAL_PLAYERS);
-preloadImages("car", TOTAL_CARS);
-
+/* Change car or player using arrows */
 function changeItem(type, direction) {
   if (type === "player") {
     playerIndex =
@@ -106,6 +114,7 @@ function changeItem(type, direction) {
   updateItem(type);
 }
 
+/* Update the displayed image */
 function updateItem(type) {
   const isPlayer = type === "player";
   const index = isPlayer ? playerIndex : carIndex;
@@ -125,6 +134,7 @@ function updateItem(type) {
   }
 }
 
+/* Select car or player without a message */
 function selectItem(type) {
   if (type === "player") {
     selectedPlayer = playerIndex;
@@ -134,9 +144,6 @@ function selectItem(type) {
     return;
   }
 
-  // Do not show a selection message.
-  // Return to Garage without adding another history entry.
-  screenHistory.length = 0;
   displayScreen("garage");
 }
 
@@ -147,11 +154,10 @@ function chooseSeries(name, locked) {
     return;
   }
 
-  screenHistory.length = 0;
   displayScreen("garage");
 }
 
-/* Messages */
+/* Notice messages */
 let noticeTimer;
 
 function showNotice(message) {
@@ -168,6 +174,7 @@ function showNotice(message) {
 
 function hideNotice() {
   const notice = document.getElementById("notice");
+
   if (notice) {
     notice.style.display = "none";
     notice.textContent = "";
