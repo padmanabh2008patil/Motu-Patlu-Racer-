@@ -41,6 +41,8 @@ body {
   width: 100%;
   height: 100%;
   object-fit: fill;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 button {
@@ -53,8 +55,44 @@ button {
   position: absolute;
   z-index: 4;
   padding: 0;
+  margin: 0;
   border: 0;
+  outline: none;
   background: transparent;
+  color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Transparent click areas for existing artwork arrows */
+.navArrow {
+  position: absolute;
+  z-index: 8;
+  top: 35%;
+  width: 12%;
+  height: 35%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: transparent;
+  font-size: 0;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.navArrow.left {
+  left: 0;
+}
+
+.navArrow.right {
+  right: 0;
+}
+
+.navArrow:focus,
+.hit:focus {
+  outline: none;
 }
 
 /* Back button */
@@ -127,39 +165,6 @@ button {
   text-shadow: 2px 3px 3px black;
 }
 
-/* Existing selection arrows */
-.navArrow {
-  position: absolute;
-  z-index: 8;
-  top: 43%;
-  width: clamp(44px, 7vw, 76px);
-  height: clamp(55px, 12vh, 88px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: clamp(30px, 5vw, 48px);
-  font-weight: bold;
-  border: 3px solid #a84200;
-  border-radius: 14px;
-  background: linear-gradient(#ffb52a, #ff6900);
-  box-shadow: 0 3px 5px #0008;
-  text-shadow: 1px 2px 3px #542000;
-}
-
-.navArrow.left {
-  left: 1.5%;
-}
-
-.navArrow.right {
-  right: 1.5%;
-}
-
-.navArrow:active,
-.backBtn:active {
-  transform: scale(0.94);
-}
-
 /* Messages */
 #notice {
   display: none;
@@ -176,21 +181,6 @@ button {
   color: white;
   text-align: center;
   font-size: 15px;
-}
-
-/* Player movement animation */
-#playerBg {
-  will-change: transform;
-  animation: playerMove 2.5s ease-in-out infinite;
-}
-
-@keyframes playerMove {
-  0%, 100% {
-    transform: translateX(0) translateY(0);
-  }
-  50% {
-    transform: translateX(5px) translateY(-3px);
-  }
 }
 
 /* Landscape mode message */
@@ -213,4 +203,3 @@ button {
     display: flex !important;
   }
 }
-
