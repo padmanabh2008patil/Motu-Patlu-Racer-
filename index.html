@@ -175,26 +175,27 @@
       onclick="changeItem('player',1)"></button>
   </section>
   
-  !-- CAR SELECTION -->
-  <section id="cars" class="screen">
-    <img id="carBg" class="bg" src="images/car1.png" alt="Car">
+  
+<!-- CAR SELECTION -->
+<section id="cars" class="screen">
+  <img id="carBg" class="bg" src="images/car1.png" alt="Car">
 
-    <button class="hit" aria-label="Back"
-      style="left:0;top:0;width:10%;height:20%"
-      onclick="go('garage')"></button>
+  <button class="hit" aria-label="Back"
+    style="left:0;top:0;width:12%;height:20%"
+    onclick="backScreen()"></button>
 
-    <button class="hit" aria-label="Previous Car"
-      style="left:25%;bottom:0;width:14%;height:23%"
-      onclick="changeItem('car',-1)"></button>
+  <button class="hit" aria-label="Previous Car"
+    style="left:25%;bottom:0;width:15%;height:25%;z-index:10"
+    onclick="changeItem('car',-1)"></button>
 
-    <button class="hit" aria-label="Select or Unlock Car"
-      style="left:38%;bottom:0;width:34%;height:23%"
-      onclick="selectItem('car')"></button>
+  <button class="hit" aria-label="Select Car"
+    style="left:40%;bottom:0;width:24%;height:25%;z-index:10"
+    onclick="selectItem('car')"></button>
 
-    <button class="hit" aria-label="Next Car"
-      style="left:70%;bottom:0;width:14%;height:23%"
-      onclick="changeItem('car',1)"></button>
-  </section>
+  <button class="hit" aria-label="Next Car"
+    style="left:64%;bottom:0;width:15%;height:25%;z-index:10"
+    onclick="changeItem('car',1)"></button>
+</section>
   
   <div id="notice" role="status"></div>
 </div>
