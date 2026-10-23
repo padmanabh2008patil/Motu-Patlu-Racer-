@@ -1,5 +1,5 @@
 
-const screens = document.querySelectorAll(".screen");
+let screens = document.querySelectorAll(".screen");
 
 /* Screen navigation history */
 let screenHistory = [];
