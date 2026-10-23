@@ -228,7 +228,47 @@ function chooseSeries(name, locked) {
 
   showSeriesScreen(imagePath, name);
 }
+function showSeriesScreen(imagePath, name) {
+  let seriesScreen = document.getElementById("seriesLevels");
 
+  if (!seriesScreen) {
+    seriesScreen = document.createElement("section");
+    seriesScreen.id = "seriesLevels";
+    seriesScreen.className = "screen";
+
+    const image = document.createElement("img");
+    image.id = "seriesLevelImage";
+    image.className = "bg";
+    image.alt = "Series Levels";
+
+    seriesScreen.appendChild(image);
+
+    const backButton = document.createElement("button");
+    backButton.className = "hit";
+    backButton.setAttribute("aria-label", "Back");
+    backButton.style.cssText =
+      "left:0;top:0;width:10%;height:20%;";
+    backButton.onclick = backScreen;
+
+    seriesScreen.appendChild(backButton);
+
+    document.body.appendChild(seriesScreen);
+    screens = document.querySelectorAll(".screen");
+  }
+
+  const image = document.getElementById("seriesLevelImage");
+
+  image.onerror = () => {
+    showNotice(`Image not found: ${imagePath}`);
+  };
+
+  image.onload = () => {
+    hideNotice();
+  };
+
+  image.src = imagePath;
+  go("seriesLevels");
+}
 /* Notifications */
 function showNotice(message) {
   const notice = document.getElementById("notice");
