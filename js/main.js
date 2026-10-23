@@ -187,6 +187,7 @@ function updateItem(type) {
   };
 
   // Use the same path as the files in the images folder.
+  positionArrows(type, index);
   image.src = path;
 }
 
