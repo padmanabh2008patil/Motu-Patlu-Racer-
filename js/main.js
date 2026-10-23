@@ -56,21 +56,16 @@ function go(id) {
 }
 
 function backScreen() {
-  const current = document.querySelector(".screen.active");
-
   while (screenHistory.length > 0) {
     const previous = screenHistory.pop();
 
-    if (
-      document.getElementById(previous) &&
-      (!current || previous !== current.id)
-    ) {
+    if (document.getElementById(previous)) {
       displayScreen(previous);
       return;
     }
   }
 
-  displayScreen("garage");
+  displayScreen("home");
 }
 
 // ========================================
@@ -78,11 +73,10 @@ function backScreen() {
 // ========================================
 
 function startLoading() {
-  const loadingScreen = document.getElementById("loading");
   const progressEl = document.getElementById("progress");
   const percentEl = document.getElementById("loadPercent");
 
-  if (!loadingScreen) {
+  if (!document.getElementById("loading")) {
     displayScreen("home");
     return;
   }
@@ -113,7 +107,35 @@ function startLoading() {
 }
 
 // ========================================
-// OPEN PLAYER AND CAR SELECTION
+// PRELOAD IMAGES
+// ========================================
+
+const imageCache = {};
+
+function preloadImages(prefix, total) {
+  for (let i = 1; i <= total; i++) {
+    const name = prefix + i;
+    const img = new Image();
+
+    img.onload = function () {
+      console.log("Image ready:", name);
+    };
+
+    img.onerror = function () {
+      console.error("Image failed to load:", name + ".png");
+    };
+
+    img.src = "images/" + name + ".png";
+    imageCache[name] = img;
+  }
+}
+
+// Start loading all player and car images
+preloadImages("player", TOTAL_PLAYERS);
+preloadImages("car", TOTAL_CARS);
+
+// ========================================
+// OPEN PLAYER / CAR SELECTION
 // ========================================
 
 function openPlayers() {
@@ -129,7 +151,7 @@ function openCars() {
 }
 
 // ========================================
-// PREVIOUS / NEXT
+// NEXT / PREVIOUS
 // ========================================
 
 function changeItem(type, direction) {
@@ -138,19 +160,47 @@ function changeItem(type, direction) {
   if (step !== 1 && step !== -1) return;
 
   if (type === "car") {
+    // Car 1 + Previous returns to Garage
+    if (step === -1 && carIndex === 0) {
+      returnToGarage();
+      return;
+    }
+
     carIndex = (carIndex + step + TOTAL_CARS) % TOTAL_CARS;
     updateItem("car");
     return;
   }
 
   if (type === "player") {
+    // Player 1 + Previous returns to Garage
+    if (step === -1 && playerIndex === 0) {
+      returnToGarage();
+      return;
+    }
+
     playerIndex = (playerIndex + step + TOTAL_PLAYERS) % TOTAL_PLAYERS;
     updateItem("player");
   }
 }
 
 // ========================================
-// CHANGE IMAGE
+// RETURN TO GARAGE / MENU
+// ========================================
+
+function returnToGarage() {
+  // Remove the selection screen's history entry if it points to Garage
+  if (
+    screenHistory.length > 0 &&
+    screenHistory[screenHistory.length - 1] === "garage"
+  ) {
+    screenHistory.pop();
+  }
+
+  displayScreen("garage");
+}
+
+// ========================================
+// UPDATE IMAGE
 // ========================================
 
 function updateItem(type) {
@@ -159,37 +209,36 @@ function updateItem(type) {
 
   if (!isCar && !isPlayer) return;
 
-  const total = isCar ? TOTAL_CARS : TOTAL_PLAYERS;
   const index = isCar ? carIndex : playerIndex;
   const prefix = isCar ? "car" : "player";
   const imageId = isCar ? "carBg" : "playerBg";
   const image = document.getElementById(imageId);
 
   if (!image) {
-    console.error("Missing image element:", imageId);
+    console.error("Image element not found:", imageId);
     showNotice("इमेज दाखवण्याची जागा सापडली नाही.");
     return;
   }
 
+  const total = isCar ? TOTAL_CARS : TOTAL_PLAYERS;
   const safeIndex = ((index % total) + total) % total;
-  const fileName = prefix + (safeIndex + 1) + ".png";
+  const fileName = prefix + (safeIndex + 1);
+  const cachedImage = imageCache[fileName];
 
   if (isCar) carIndex = safeIndex;
   if (isPlayer) playerIndex = safeIndex;
 
-  // Remove old error handler
-  image.onerror = null;
-
-  // Report missing images
   image.onerror = function () {
-    showNotice(fileName + " लोड होत नाही. GitHub वरील फाइल तपासा.");
-    console.error("Image failed to load:", image.src);
+    showNotice(fileName + ".png लोड होत नाही. GitHub वरील फाइल तपासा.");
   };
 
-  // Force the browser to request the current image URL
-  image.src = "images/" + fileName + "?v=" + Date.now();
+  image.onload = null;
 
-  console.log("Showing image:", fileName);
+  if (cachedImage && cachedImage.complete && cachedImage.naturalWidth > 0) {
+    image.src = cachedImage.src;
+  } else {
+    image.src = "images/" + fileName + ".png";
+  }
 }
 
 // ========================================
@@ -205,11 +254,11 @@ function selectItem(type) {
     return;
   }
 
-  displayScreen("garage");
+  returnToGarage();
 }
 
 // ========================================
-// SERIES
+// CHOOSE SERIES
 // ========================================
 
 function chooseSeries(name, locked) {
@@ -218,7 +267,7 @@ function chooseSeries(name, locked) {
     return;
   }
 
-  displayScreen("garage");
+  returnToGarage();
 }
 
 // ========================================
@@ -238,9 +287,7 @@ function showNotice(message) {
   notice.textContent = message;
   notice.style.display = "block";
 
-  noticeTimer = setTimeout(() => {
-    hideNotice();
-  }, 3000);
+  noticeTimer = setTimeout(hideNotice, 3000);
 }
 
 function hideNotice() {
@@ -258,7 +305,7 @@ function hideNotice() {
 }
 
 // ========================================
-// START
+// START GAME
 // ========================================
 
 startLoading();
