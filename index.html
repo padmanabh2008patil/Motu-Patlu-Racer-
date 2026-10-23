@@ -151,6 +151,7 @@
       onclick="chooseSeries('Forest',true)"></button>
   </section>
 
+  
   <!-- PLAYER SELECTION -->
   <section id="players" class="screen">
     <img id="playerBg" class="bg" src="images/player1.png" alt="Player">
@@ -163,16 +164,14 @@
       style="left:0;bottom:20%;width:28%;height:18%"
       onclick="showNotice('Character information')"></button>
 
-    <button class="hit" aria-label="Previous Player"
-      style="left:27%;bottom:0;width:13%;height:24%"
+    <button id="playerPrev" class="hit" aria-label="Previous Player"
       onclick="changeItem('player',-1)"></button>
 
     <button class="hit" aria-label="Select Player"
       style="left:40%;bottom:0;width:24%;height:24%"
       onclick="selectItem('player')"></button>
 
-    <button class="hit" aria-label="Next Player"
-      style="left:64%;bottom:0;width:13%;height:24%"
+    <button id="playerNext" class="hit" aria-label="Next Player"
       onclick="changeItem('player',1)"></button>
   </section>
 
@@ -184,19 +183,17 @@
       style="left:0;top:0;width:10%;height:18%;z-index:10"
       onclick="backScreen()"></button>
 
-    <button class="hit" aria-label="Previous Car"
-      style="left:27%;bottom:0;width:13%;height:24%;z-index:10"
+    <button id="carPrev" class="hit" aria-label="Previous Car"
       onclick="changeItem('car',-1)"></button>
 
     <button class="hit" aria-label="Select Car"
       style="left:40%;bottom:0;width:24%;height:24%;z-index:10"
       onclick="selectItem('car')"></button>
 
-    <button class="hit" aria-label="Next Car"
-      style="left:64%;bottom:0;width:13%;height:24%;z-index:10"
+    <button id="carNext" class="hit" aria-label="Next Car"
       onclick="changeItem('car',1)"></button>
   </section>
-
+  
   <div id="notice" role="status"></div>
 </div>
 
