@@ -97,7 +97,7 @@ function openPlayers() {
 }
 
 function openCars() {
-  carIndex = selectedCar;
+  carIndex = 0;
   updateItem("car");
   go("cars");
 }
