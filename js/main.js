@@ -125,6 +125,45 @@ function changeItem(type, direction) {
   updateItem(type);
 }
 
+/* Individual transparent arrow hit areas */
+const arrowPositions = {
+  car: [
+    { prev: [29, 80, 7, 13], next: [65, 80, 7, 13] },
+    { prev: [34, 80, 7, 13], next: [61, 80, 7, 13] },
+    { prev: [57, 80, 7, 13], next: [91, 80, 7, 13] },
+    { prev: [31, 83, 7, 13], next: [63, 83, 7, 13] },
+    { prev: [58, 82, 7, 13], next: [92, 82, 7, 13] },
+    { prev: [29, 80, 7, 13], next: [64, 80, 7, 13] }
+  ],
+  player: [
+    { prev: [38, 78, 8, 14], next: [76, 78, 8, 14] },
+    { prev: [36, 78, 8, 14], next: [76, 78, 8, 14] },
+    { prev: [28, 78, 8, 14], next: [70, 78, 8, 14] },
+    { prev: [29, 82, 8, 14], next: [68, 82, 8, 14] },
+    { prev: [29, 82, 8, 14], next: [67, 82, 8, 14] },
+    { prev: [28, 82, 8, 14], next: [67, 82, 8, 14] }
+  ]
+};
+
+function positionArrows(type, index) {
+  const positions = arrowPositions[type][index];
+  const prefix = type === "car" ? "car" : "player";
+
+  [["Prev", positions.prev], ["Next", positions.next]]
+    .forEach(([suffix, values]) => {
+      const button = document.getElementById(prefix + suffix);
+      if (!button) return;
+
+      const [left, top, width, height] = values;
+      button.style.left = left + "%";
+      button.style.top = top + "%";
+      button.style.width = width + "%";
+      button.style.height = height + "%";
+      button.style.bottom = "auto";
+      button.style.zIndex = "10";
+    });
+}
+
 /* Change image and report missing files */
 function updateItem(type) {
   const isPlayer = type === "player";
