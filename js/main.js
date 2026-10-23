@@ -207,11 +207,26 @@ function selectItem(type) {
 /* Series selection */
 function chooseSeries(name, locked) {
   if (locked) {
-    showNotice(`${name} Series सध्या लॉक आहे.`);
+    showNotice(`${name} Series is currently locked.`);
     return;
   }
 
-  go("garage");
+  const seriesImages = {
+    Village: "images/village-level-screens.png",
+    City: "images/city-level-screens.png",
+    Mountain: "images/mountain-level-screens.png",
+    Desert: "images/desert-level-screens.png",
+    Forest: "images/forest-level-screens.png"
+  };
+
+  const imagePath = seriesImages[name];
+
+  if (!imagePath) {
+    showNotice("Series not found.");
+    return;
+  }
+
+  showSeriesScreen(imagePath, name);
 }
 
 /* Notifications */
